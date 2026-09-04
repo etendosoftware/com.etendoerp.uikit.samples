@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+  <database name="TABLE ETOKRS_KEYRESULT">
+    <table name="ETOKRS_KEYRESULT" primaryKey="ETOKRS_KEYRESULT_PK">
+      <column name="ETOKRS_KEYRESULT_ID" primaryKey="true" required="true" type="VARCHAR" size="32" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="AD_CLIENT_ID" primaryKey="false" required="true" type="VARCHAR" size="32" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="AD_ORG_ID" primaryKey="false" required="true" type="VARCHAR" size="32" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="ISACTIVE" primaryKey="false" required="true" type="CHAR" size="1" autoIncrement="false">
+        <default><![CDATA[Y]]></default>
+        <onCreateDefault/>
+      </column>
+      <column name="CREATED" primaryKey="false" required="true" type="TIMESTAMP" size="7" autoIncrement="false">
+        <default><![CDATA[SYSDATE]]></default>
+        <onCreateDefault/>
+      </column>
+      <column name="CREATEDBY" primaryKey="false" required="true" type="VARCHAR" size="32" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="UPDATED" primaryKey="false" required="true" type="TIMESTAMP" size="7" autoIncrement="false">
+        <default><![CDATA[SYSDATE]]></default>
+        <onCreateDefault/>
+      </column>
+      <column name="UPDATEDBY" primaryKey="false" required="true" type="VARCHAR" size="32" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="ETOKRS_OBJECTIVE_ID" primaryKey="false" required="true" type="VARCHAR" size="32" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="NAME" primaryKey="false" required="true" type="VARCHAR" size="255" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="OWNER" primaryKey="false" required="false" type="VARCHAR" size="60" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="UOM" primaryKey="false" required="false" type="VARCHAR" size="20" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="BASEVALUE" primaryKey="false" required="true" type="DECIMAL" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="TARGETVALUE" primaryKey="false" required="true" type="DECIMAL" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="CURRENTVALUE" primaryKey="false" required="true" type="DECIMAL" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="SCORE" primaryKey="false" required="true" type="DECIMAL" autoIncrement="false">
+        <default><![CDATA[0]]></default>
+        <onCreateDefault/>
+      </column>
+      <column name="SCORETARGET" primaryKey="false" required="true" type="DECIMAL" autoIncrement="false">
+        <default><![CDATA[0.7]]></default>
+        <onCreateDefault/>
+      </column>
+      <column name="WEIGHT" primaryKey="false" required="true" type="DECIMAL" autoIncrement="false">
+        <default><![CDATA[1]]></default>
+        <onCreateDefault/>
+      </column>
+      <column name="CONFIDENCE" primaryKey="false" required="true" type="VARCHAR" size="10" autoIncrement="false">
+        <default><![CDATA[MED]]></default>
+        <onCreateDefault/>
+      </column>
+      <column name="SEQNO" primaryKey="false" required="true" type="DECIMAL" size="10,0" autoIncrement="false">
+        <default><![CDATA[10]]></default>
+        <onCreateDefault/>
+      </column>
+      <foreign-key foreignTable="ETOKRS_OBJECTIVE" name="ETOKRS_KEYRESULT_OBJ_FK">
+        <reference local="ETOKRS_OBJECTIVE_ID" foreign="ETOKRS_OBJECTIVE_ID"/>
+      </foreign-key>
+      <index name="ETOKRS_KEYRESULT_OBJ_IDX" unique="false">
+        <index-column name="ETOKRS_OBJECTIVE_ID"/>
+      </index>
+      <check name="ETOKRS_KEYRESULT_CONF_CHK"><![CDATA[CONFIDENCE IN ('HIGH', 'MED', 'LOW')]]></check>
+      <check name="ETOKRS_KEYRESULT_ISACTIVE_CHK"><![CDATA[ISACTIVE IN ('Y', 'N')]]></check>
+      <check name="ETOKRS_KEYRESULT_SCORE_CHK"><![CDATA[SCORE >= 0 AND SCORE <= 1]]></check>
+      <check name="ETOKRS_KEYRESULT_SCORETG_CHK"><![CDATA[SCORETARGET >= 0 AND SCORETARGET <= 1]]></check>
+      <check name="ETOKRS_KEYRESULT_SPAN_CHK"><![CDATA[TARGETVALUE <> BASEVALUE]]></check>
+      <check name="ETOKRS_KEYRESULT_WEIGHT_CHK"><![CDATA[WEIGHT > 0]]></check>
+    </table>
+  </database>
