@@ -1,0 +1,58 @@
+{
+  "view": "ETDEMO_Stock",
+  "module": "com.etendoerp.uikit.samples",
+  "source": "com.etendoerp.uikit.samples/src/com/etendoerp/uikit/samples/stock/templates/ETDEMO_Stock.ftl",
+  "classpath": "/com/etendoerp/uikit/samples/stock/templates/ETDEMO_Stock.ftl",
+  "comment": "Order is load order. The runtime must come first, styles before the app renders, labels before anything calls OB.UIKit.t.",
+  "bundle": [
+    {
+      "type": "js",
+      "path": "com.etendoerp.uikit/web/com.etendoerp.uikit/js/uikit.js"
+    },
+    {
+      "type": "css",
+      "key": "com.etendoerp.uikit",
+      "path": "com.etendoerp.uikit/web/com.etendoerp.uikit/css/uikit.css"
+    },
+    {
+      "type": "css",
+      "key": "com.etendoerp.uikit.samples.stock",
+      "path": "com.etendoerp.uikit.samples/web/com.etendoerp.uikit.samples/css/stock-pivot.css"
+    },
+    {
+      "type": "labels",
+      "prefixes": [
+        "ETDEMO_",
+        "ETUIK_"
+      ]
+    },
+    {
+      "type": "js",
+      "path": "com.etendoerp.uikit.samples/web/com.etendoerp.uikit.samples/js/stock-pivot.js"
+    }
+  ],
+  "datasources": [
+    {
+      "action": "com.etendoerp.uikit.samples.stock.StockPivot",
+      "params": {
+        "q": "null",
+        "page": "1",
+        "limit": "25",
+        "zeros": "N",
+        "sort": "code"
+      },
+      "requires": [
+        "warehouses",
+        "rows",
+        "colTotals",
+        "summary",
+        "page",
+        "meta"
+      ]
+    }
+  ],
+  "writes": [],
+  "writesComment": "ETDEMO_Stock es de solo lectura: m_storage_detail lo mantienen las transacciones y el costeo, no esta ventana, asi que W7 no tiene nada que probar y reporta SKIP.",
+  "checks": "com.etendoerp.uikit.samples/verify/etdemo-stock.checks.mjs",
+  "checksComment": "Gates propios: la busqueda estrecha en SQL, la paginacion es del servidor, el eje de almacenes es identico con y sin q, y la aritmetica del pivote recalculada aparte."
+}
