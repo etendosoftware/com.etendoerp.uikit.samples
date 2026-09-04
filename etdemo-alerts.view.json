@@ -1,0 +1,63 @@
+{
+  "view": "ETDEMO_Alerts",
+  "module": "com.etendoerp.uikit.samples",
+  "source": "com.etendoerp.uikit.samples/src/com/etendoerp/uikit/samples/alerts/templates/ETDEMO_Alerts.ftl",
+  "classpath": "/com/etendoerp/uikit/samples/alerts/templates/ETDEMO_Alerts.ftl",
+  "comment": "Order is load order. The runtime must come first, styles before the app renders, labels before anything calls OB.UIKit.t.",
+  "bundle": [
+    {
+      "type": "js",
+      "path": "com.etendoerp.uikit/web/com.etendoerp.uikit/js/uikit.js"
+    },
+    {
+      "type": "css",
+      "key": "com.etendoerp.uikit",
+      "path": "com.etendoerp.uikit/web/com.etendoerp.uikit/css/uikit.css"
+    },
+    {
+      "type": "css",
+      "key": "com.etendoerp.uikit.samples.alerts",
+      "path": "com.etendoerp.uikit.samples/web/com.etendoerp.uikit.samples/css/alerts-inbox.css"
+    },
+    {
+      "type": "labels",
+      "prefixes": [
+        "ETDEMO_",
+        "ETUIK_"
+      ]
+    },
+    {
+      "type": "js",
+      "path": "com.etendoerp.uikit.samples/web/com.etendoerp.uikit.samples/js/alerts-inbox.js"
+    }
+  ],
+  "datasources": [
+    {
+      "action": "com.etendoerp.uikit.samples.alerts.AlertInbox",
+      "params": {
+        "status": "null",
+        "rule": "null",
+        "limit": "100"
+      },
+      "requires": [
+        "statuses",
+        "rules",
+        "total",
+        "rows",
+        "meta"
+      ]
+    }
+  ],
+  "writes": [
+    {
+      "action": "com.etendoerp.uikit.samples.alerts.AckAlert",
+      "payload": {
+        "id": "D0CB68A7ADDD462E8B46438E2B9F58F6",
+        "status": "ACKNOWLEDGED"
+      }
+    }
+  ],
+  "writesComment": "Safe to replay: AckAlert is idempotent, so the armed POST that W7 sends on every run answers success with changed:false once the row is already ACKNOWLEDGED. The id is instance data on purpose -- W7 needs a leg that really succeeds, and a placeholder id would be refused by the scoped re-read and fail the gate. It is the G/L ITEM WITHOUT ACCOUNTING alert, the one alert whose rule lists the F&B International Group Admin role as a recipient; alerts are regenerable by the alert process, which is what makes writing to one safe here and nowhere else in the kit.",
+  "checks": "com.etendoerp.uikit.samples/verify/etdemo-alerts.checks.mjs",
+  "checksComment": "Gates propios: los recuentos del carril son identicos con y sin filtro y cuadran con un count(*) independiente, el detalle estrecha de verdad en SQL comparando conjuntos de ids, el filtro de destinatario recorta lo visible para un rol no administrador que entra por HTTP, la escritura va y vuelve en la base y se restaura, y la transicion prohibida se rechaza con sobre de error en lugar de un 500."
+}
