@@ -1,0 +1,67 @@
+{
+  "view": "ETDEMO_Picking",
+  "module": "com.etendoerp.uikit.samples",
+  "source": "com.etendoerp.uikit.samples/src/com/etendoerp/uikit/samples/picking/templates/ETDEMO_Picking.ftl",
+  "classpath": "/com/etendoerp/uikit/samples/picking/templates/ETDEMO_Picking.ftl",
+  "comment": "Order is load order. The runtime must come first, styles before the app renders, labels before anything calls OB.UIKit.t.",
+  "bundle": [
+    {
+      "type": "js",
+      "path": "com.etendoerp.uikit/web/com.etendoerp.uikit/js/uikit.js"
+    },
+    {
+      "type": "css",
+      "key": "com.etendoerp.uikit",
+      "path": "com.etendoerp.uikit/web/com.etendoerp.uikit/css/uikit.css"
+    },
+    {
+      "type": "css",
+      "key": "com.etendoerp.uikit.samples.picking",
+      "path": "com.etendoerp.uikit.samples/web/com.etendoerp.uikit.samples/css/picking.css"
+    },
+    {
+      "type": "labels",
+      "prefixes": [
+        "ETDEMO_",
+        "ETUIK_"
+      ]
+    },
+    {
+      "type": "js",
+      "path": "com.etendoerp.uikit.samples/web/com.etendoerp.uikit.samples/js/picking.js"
+    }
+  ],
+  "datasources": [
+    {
+      "action": "com.etendoerp.uikit.samples.picking.PickList",
+      "params": {
+        "status": "null",
+        "q": "null",
+        "order": "522DD65F40E74E3AB53C4AF26F0026EA",
+        "page": "1",
+        "limit": "25"
+      },
+      "requires": [
+        "statuses",
+        "total",
+        "orders",
+        "order",
+        "lines",
+        "page",
+        "meta"
+      ]
+    }
+  ],
+  "writes": [
+    {
+      "action": "com.etendoerp.uikit.samples.picking.ConfirmOrder",
+      "payload": {
+        "orderId": "522DD65F40E74E3AB53C4AF26F0026EA",
+        "dryRun": true
+      }
+    }
+  ],
+  "writesComment": "Replayable because it mutates nothing: dryRun:true makes ConfirmOrder re-read the order under scope, ask core which document actions it would accept, and answer without calling ProcessOrderUtil at all -- so the armed POST W7 sends on every run leaves c_order untouched. That is also the protocol's default: an absent or malformed dryRun is read as a simulation, and only a literal false mutates. The payload deliberately omits action, so the same body stays valid whichever state order 1000372 is in -- DR answers CO, CO answers RE, and neither is a rejection. The orderId is instance data on purpose: W7 needs a leg that really succeeds, and a placeholder id would be refused by the scoped re-read and fail the gate. Order 1000372 is one of the eight 2026 drafts, and the round trip that does mutate it (DR to CO to DR) lives in the checks module, inside a try/finally.",
+  "checks": "com.etendoerp.uikit.samples/verify/etdemo-picking.checks.mjs",
+  "checksComment": "Gates propios: el dryRun no mueve docstatus en c_order, el CO real lo mueve y el RE lo devuelve (fixture repetible con try/finally), la transicion prohibida se rechaza con sobre de error y HTTP 200 dejando la fila intacta, el semaforo cuenta solo lineas con isstocked='Y' and producttype='I', el pending recorta con greatest(0, ...) sobre una linea forzada a qtyordered negativo, y los recuentos del selector no se mueven al cambiar el pedido seleccionado."
+}
