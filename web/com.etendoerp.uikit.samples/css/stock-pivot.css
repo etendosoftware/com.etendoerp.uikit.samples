@@ -1,0 +1,162 @@
+/*
+ * ETDEMO_Stock stylesheet. Everything is scoped under .uik-etdemo_stock, the class the runtime
+ * puts on the window's own root, so this file cannot reach Classic's chrome or another window.
+ *
+ * The table itself, the pager and the chips are .uik-table / .uik-pager / .uik-chip from
+ * uikit.css. What is here is only what a pivot needs and a list does not: a wide grid that
+ * scrolls sideways while the product column stays put, and a footer row that reads as a total
+ * rather than as one more product.
+ */
+
+.uik-etdemo_stock {
+  --stk-radius: 7px;
+}
+
+/* --------------------------------------------------------------- filter bar */
+
+.uik-etdemo_stock .stk-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.uik-etdemo_stock .stk-input {
+  flex: 0 1 280px;
+  min-width: 180px;
+  padding: 5px 10px;
+  border: 1px solid var(--uik-line);
+  border-radius: var(--stk-radius);
+  background: var(--uik-surface);
+  color: var(--uik-ink);
+  font: inherit;
+}
+
+.uik-etdemo_stock .stk-input:focus {
+  outline: 2px solid var(--uik-brand);
+  outline-offset: -1px;
+}
+
+.uik-etdemo_stock .stk-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.uik-etdemo_stock .stk-group-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--uik-ink-soft);
+}
+
+/* ------------------------------------------------------------------ summary */
+
+.uik-etdemo_stock .stk-sum {
+  display: flex;
+  align-items: baseline;
+  gap: 24px;
+  flex-wrap: wrap;
+  padding: 8px 0 12px;
+  border-top: 1px solid var(--uik-line);
+}
+
+.uik-etdemo_stock .stk-stat b {
+  font-size: 18px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--uik-ink);
+}
+
+.uik-etdemo_stock .stk-stat em {
+  margin-left: 5px;
+  font-style: normal;
+  font-size: 12px;
+  color: var(--uik-ink-soft);
+}
+
+/* The two sentences that keep the numbers honest; small, always on screen, never a tooltip. */
+.uik-etdemo_stock .stk-note {
+  flex: 1 1 100%;
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--uik-ink-soft);
+}
+
+/* -------------------------------------------------------------------- pivot */
+
+.uik-etdemo_stock .stk-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--uik-line);
+  border-radius: var(--stk-radius);
+}
+
+/* A pivot grows sideways with the warehouse count, so the row label has to survive the scroll. */
+.uik-etdemo_stock .stk-pivot .stk-prod {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: var(--uik-surface);
+  min-width: 200px;
+}
+
+.uik-etdemo_stock .stk-pivot .stk-prod a {
+  color: var(--uik-brand);
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.uik-etdemo_stock .stk-pivot .stk-prod a:hover {
+  text-decoration: underline;
+}
+
+.uik-etdemo_stock .stk-pivot .stk-prod em {
+  display: block;
+  font-style: normal;
+  font-size: 11px;
+  color: var(--uik-ink-soft);
+}
+
+.uik-etdemo_stock .stk-pivot .stk-uom {
+  color: var(--uik-ink-soft);
+  white-space: nowrap;
+}
+
+.uik-etdemo_stock .stk-pivot .stk-rowtotal {
+  font-weight: 700;
+  white-space: nowrap;
+  background: var(--uik-ground);
+}
+
+.uik-etdemo_stock .stk-pivot tfoot th,
+.uik-etdemo_stock .stk-pivot tfoot td {
+  border-top: 2px solid var(--uik-line);
+  border-bottom: 0;
+  background: var(--uik-ground);
+  font-weight: 700;
+}
+
+.uik-etdemo_stock .stk-pivot tfoot th {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  text-align: left;
+}
+
+.uik-etdemo_stock .stk-empty {
+  margin: 0;
+  padding: 24px 10px;
+  color: var(--uik-ink-soft);
+  text-align: center;
+}
+
+/* ------------------------------------------------------------------- pager */
+
+.uik-etdemo_stock .stk-range {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+}
