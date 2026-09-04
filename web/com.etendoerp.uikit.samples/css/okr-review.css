@@ -1,0 +1,529 @@
+/*
+ * ETOKRS_Review stylesheet. Everything is scoped under .uik-etokrs_review, the class the runtime
+ * puts on the window's own root, so this file cannot reach Classic's chrome or another window.
+ *
+ * Primitives (badge, rail, meter) come from uikit.css. What is here is layout and the two
+ * densities the screen needs: a summary that reads at a glance, and a table that reads carefully.
+ */
+
+.uik-etokrs_review {
+  --okr-radius: 7px;
+  --okr-shadow: 0 1px 2px rgba(22, 32, 43, 0.06);
+}
+
+.uik-etokrs_review .okr-h2 {
+  margin: 0 0 10px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--uik-ink-soft);
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.uik-etokrs_review .okr-h2 span {
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* ----------------------------------------------------------- filter bar */
+
+.uik-etokrs_review .okr-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.uik-etokrs_review .okr-seg {
+  display: inline-flex;
+  border: 1px solid var(--uik-line);
+  border-radius: var(--okr-radius);
+  background: var(--uik-surface);
+  overflow: hidden;
+}
+
+.uik-etokrs_review .okr-seg-item {
+  appearance: none;
+  border: 0;
+  border-left: 1px solid var(--uik-line);
+  background: transparent;
+  padding: 6px 14px;
+  font: inherit;
+  font-weight: 600;
+  color: var(--uik-ink-soft);
+  cursor: pointer;
+}
+
+.uik-etokrs_review .okr-seg-item:first-child {
+  border-left: 0;
+}
+
+.uik-etokrs_review .okr-seg-item[data-empty="1"] {
+  color: color-mix(in srgb, var(--uik-ink-soft) 55%, var(--uik-surface));
+}
+
+.uik-etokrs_review .okr-seg-item[aria-pressed="true"] {
+  background: var(--uik-brand);
+  color: #fff;
+}
+
+.uik-etokrs_review .okr-clock {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.uik-etokrs_review .okr-clock-num {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.uik-etokrs_review .okr-clock-sub {
+  color: var(--uik-ink-soft);
+}
+
+.uik-etokrs_review .okr-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.uik-etokrs_review .okr-chip {
+  appearance: none;
+  border: 1px solid var(--uik-line);
+  border-radius: 12px;
+  background: var(--uik-surface);
+  padding: 3px 11px;
+  font: inherit;
+  color: var(--uik-ink-soft);
+  cursor: pointer;
+}
+
+.uik-etokrs_review .okr-chip[aria-pressed="true"] {
+  border-color: var(--uik-brand);
+  background: color-mix(in srgb, var(--uik-brand) 10%, var(--uik-surface));
+  color: var(--uik-brand);
+  font-weight: 600;
+}
+
+/* --------------------------------------------- department small multiples */
+
+.uik-etokrs_review .okr-rail {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 10px;
+}
+
+.uik-etokrs_review .okr-card {
+  appearance: none;
+  display: grid;
+  gap: 8px;
+  text-align: left;
+  padding: 11px 13px 12px;
+  border: 1px solid var(--uik-line);
+  border-radius: var(--okr-radius);
+  background: var(--uik-surface);
+  box-shadow: var(--okr-shadow);
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.uik-etokrs_review .okr-card.is-on {
+  border-color: var(--uik-brand);
+  box-shadow: 0 0 0 1px var(--uik-brand);
+}
+
+.uik-etokrs_review .okr-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.uik-etokrs_review .okr-card-name {
+  font-weight: 700;
+}
+
+.uik-etokrs_review .okr-card-foot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.uik-etokrs_review .okr-card-score {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.uik-etokrs_review .okr-card-score em {
+  font-style: normal;
+  font-weight: 400;
+  color: var(--uik-ink-soft);
+}
+
+.uik-etokrs_review .okr-card-meta {
+  font-size: 11px;
+  color: var(--uik-ink-soft);
+}
+
+/* ----------------------------------------------------------------- agenda */
+
+.uik-etokrs_review .okr-agenda {
+  padding: 13px 15px 6px;
+  border: 1px solid var(--uik-line);
+  border-left: 3px solid var(--uik-brand);
+  border-radius: var(--okr-radius);
+  background: var(--uik-surface);
+  box-shadow: var(--okr-shadow);
+}
+
+.uik-etokrs_review .okr-agenda-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.uik-etokrs_review .okr-agenda-item {
+  display: grid;
+  grid-template-columns: 22px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 0;
+  border-top: 1px solid var(--uik-line);
+}
+
+.uik-etokrs_review .okr-agenda-item:first-child {
+  border-top: 0;
+}
+
+.uik-etokrs_review .okr-agenda-rank {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--uik-ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.uik-etokrs_review .okr-agenda-body {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.uik-etokrs_review .okr-agenda-title {
+  font-weight: 600;
+}
+
+.uik-etokrs_review .okr-agenda-meta {
+  font-size: 11px;
+  color: var(--uik-ink-soft);
+}
+
+.uik-etokrs_review .okr-agenda-num {
+  display: grid;
+  justify-items: end;
+  gap: 3px;
+  font-variant-numeric: tabular-nums;
+}
+
+.uik-etokrs_review .okr-agenda-sub {
+  font-size: 11px;
+  color: var(--uik-ink-soft);
+}
+
+/* ------------------------------------------------------------------ panel */
+
+.uik-etokrs_review .okr-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--uik-line);
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+.uik-etokrs_review .okr-tabs {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.uik-etokrs_review .okr-tab {
+  appearance: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  padding: 5px 4px;
+  margin-bottom: -9px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--uik-ink-soft);
+  cursor: pointer;
+}
+
+.uik-etokrs_review .okr-tab[aria-pressed="true"] {
+  border-bottom-color: var(--uik-brand);
+  color: var(--uik-ink);
+}
+
+.uik-etokrs_review .okr-sort {
+  font-size: 11px;
+  color: var(--uik-ink-soft);
+}
+
+.uik-etokrs_review .okr-sort-item {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 2px 4px;
+  font: inherit;
+  color: var(--uik-ink-soft);
+  cursor: pointer;
+  text-decoration: underline dotted;
+  text-underline-offset: 2px;
+}
+
+.uik-etokrs_review .okr-sort-item[aria-pressed="true"] {
+  color: var(--uik-brand);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+/* -------------------------------------------------------------- objectives */
+
+.uik-etokrs_review .okr-obj {
+  border: 1px solid var(--uik-line);
+  border-radius: var(--okr-radius);
+  background: var(--uik-surface);
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+
+.uik-etokrs_review .okr-obj-head {
+  appearance: none;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 14px minmax(0, 1fr) 200px auto;
+  align-items: center;
+  gap: 14px;
+  padding: 11px 14px;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+}
+
+.uik-etokrs_review .okr-obj-head:hover {
+  background: color-mix(in srgb, var(--uik-brand) 4%, var(--uik-surface));
+}
+
+.uik-etokrs_review .okr-obj-caret {
+  width: 0;
+  height: 0;
+  border-left: 5px solid var(--uik-ink-soft);
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  margin-left: 3px;
+}
+
+.uik-etokrs_review .okr-obj.is-open .okr-obj-caret {
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid var(--uik-ink-soft);
+  border-bottom: 0;
+  margin-left: 0;
+}
+
+.uik-etokrs_review .okr-obj-main {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.uik-etokrs_review .okr-obj-title {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.uik-etokrs_review .okr-obj-meta {
+  font-size: 11px;
+  color: var(--uik-ink-soft);
+}
+
+.uik-etokrs_review .okr-obj-nums {
+  display: grid;
+  gap: 5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.uik-etokrs_review .okr-obj-pct {
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.uik-etokrs_review .okr-obj-scores {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+}
+
+.uik-etokrs_review .okr-obj-scores em {
+  font-style: normal;
+  color: var(--uik-ink-soft);
+}
+
+/* ------------------------------------------------------------------ table */
+
+.uik-etokrs_review .okr-tablewrap {
+  overflow-x: auto;
+  border-top: 1px solid var(--uik-line);
+  background: var(--uik-ground);
+}
+
+.uik-etokrs_review .okr-panel-body > .okr-tablewrap {
+  border: 1px solid var(--uik-line);
+  border-radius: var(--okr-radius);
+  background: var(--uik-surface);
+}
+
+.uik-etokrs_review .okr-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.uik-etokrs_review .okr-table th {
+  text-align: right;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--uik-ink-soft);
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--uik-line);
+  white-space: nowrap;
+}
+
+.uik-etokrs_review .okr-table th:first-child {
+  text-align: left;
+}
+
+.uik-etokrs_review .okr-table td {
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--uik-line);
+  vertical-align: middle;
+}
+
+.uik-etokrs_review .okr-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.uik-etokrs_review .okr-t-title {
+  min-width: 240px;
+}
+
+.uik-etokrs_review .okr-t-title span {
+  display: block;
+  font-weight: 600;
+}
+
+.uik-etokrs_review .okr-t-title em {
+  display: block;
+  margin-top: 2px;
+  font-style: normal;
+  font-size: 11px;
+  color: var(--uik-ink-soft);
+}
+
+.uik-etokrs_review .okr-t-val {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.uik-etokrs_review .okr-t-rail {
+  min-width: 150px;
+}
+
+.uik-etokrs_review .okr-t-rail em,
+.uik-etokrs_review .okr-t-score em {
+  display: block;
+  margin-top: 4px;
+  font-style: normal;
+  font-size: 11px;
+  color: var(--uik-ink-soft);
+}
+
+.uik-etokrs_review .okr-t-score {
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------- updates */
+
+.uik-etokrs_review .okr-updates {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.uik-etokrs_review .okr-upd {
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr);
+  gap: 14px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--uik-line);
+}
+
+.uik-etokrs_review .okr-upd:last-child {
+  border-bottom: 0;
+}
+
+.uik-etokrs_review .okr-upd-date {
+  font-variant-numeric: tabular-nums;
+  color: var(--uik-ink-soft);
+  font-size: 11px;
+  padding-top: 2px;
+}
+
+.uik-etokrs_review .okr-upd-body {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.uik-etokrs_review .okr-upd-title {
+  font-weight: 600;
+}
+
+.uik-etokrs_review .okr-upd-move {
+  font-size: 11px;
+  color: var(--uik-ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.uik-etokrs_review .okr-upd-move b {
+  color: var(--uik-ink);
+}
+
+.uik-etokrs_review .okr-upd-note {
+  max-width: 74ch;
+}
+
+.uik-etokrs_review .okr-empty {
+  margin: 0;
+  padding: 26px 4px;
+  color: var(--uik-ink-soft);
+  text-align: center;
+}
