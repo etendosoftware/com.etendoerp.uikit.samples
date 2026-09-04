@@ -1,0 +1,145 @@
+/*
+ * ETDEMO_Alerts stylesheet. Everything is scoped under .uik-etdemo_alerts, the class the runtime
+ * puts on this window's own root, so nothing here can reach Classic's chrome or another window.
+ *
+ * The tables, the chips and the status badges are .uik-table, .uik-chip and .uik-badge from
+ * uikit.css and are not restyled. What is here is only what an inbox needs and a list does not:
+ * a two-column split that puts the filter-independent rail beside the detail it does not follow,
+ * a refresh strip that reads as machinery rather than as content, and a rejection line that is
+ * impossible to mistake for a heading.
+ *
+ * Every colour is a --uik-* token. A raw hex here would drift away from the runtime's palette the
+ * first time the palette changes, and the window would be the only one on screen that did not.
+ */
+
+.uik-etdemo_alerts {
+  --alr-radius: 7px;
+  --alr-gap: 14px;
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.uik-etdemo_alerts .alr-bar {
+  margin-bottom: var(--alr-gap);
+}
+
+.uik-etdemo_alerts .alr-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* The provenance line. Section 0 of the doc argues that a reader who does not know these rows
+ * were written by a dictionary job will misread every count on the screen, so the claim is on
+ * the screen and not only in the doc. */
+.uik-etdemo_alerts .alr-source {
+  margin: 2px 0 0;
+  color: var(--uik-ink-soft);
+  font-size: 12px;
+}
+
+.uik-etdemo_alerts .alr-rates {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+  color: var(--uik-ink-soft);
+  font-size: 12px;
+}
+
+/* The asymmetry, said on the screen. The rail counts what the filter excludes, and a reader who
+ * has not been told that will read the chips as a contradiction rather than as the feature. */
+.uik-etdemo_alerts .alr-asym {
+  margin: 10px 0 0;
+  padding: 6px 10px;
+  border-left: 3px solid var(--uik-brand);
+  background: var(--uik-surface);
+  color: var(--uik-ink-soft);
+  font-size: 12px;
+}
+
+/* A rejection from the server, and the only red text on the screen that is not a badge. It sits
+ * above the rail rather than beside the row, because by the time it is painted the optimistic
+ * change has already been rolled back and the row looks untouched again. */
+.uik-etdemo_alerts .alr-note {
+  margin: 10px 0 0;
+  padding: 6px 10px;
+  border: 1px solid var(--uik-line);
+  border-radius: var(--alr-radius);
+  background: var(--uik-surface);
+  font-size: 12px;
+}
+
+/* -------------------------------------------------------------------- rail */
+
+.uik-etdemo_alerts .alr-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.uik-etdemo_alerts .alr-chips b {
+  margin-left: 4px;
+  font-variant-numeric: tabular-nums;
+}
+
+.uik-etdemo_alerts .alr-rail,
+.uik-etdemo_alerts .alr-list {
+  padding: 12px 14px;
+  border: 1px solid var(--uik-line);
+  border-radius: var(--alr-radius);
+  background: var(--uik-surface);
+}
+
+.uik-etdemo_alerts .alr-rail {
+  margin-bottom: var(--alr-gap);
+}
+
+/* The rule name is a chip inside a table cell, so it must not stretch the column: a long rule
+ * name wraps inside the chip rather than pushing the counts off the right edge. */
+.uik-etdemo_alerts .alr-rail .uik-chip {
+  max-width: 42ch;
+  white-space: normal;
+  text-align: left;
+}
+
+/* ------------------------------------------------------------------- list */
+
+.uik-etdemo_alerts .alr-list td:first-child {
+  max-width: 52ch;
+}
+
+.uik-etdemo_alerts .alr-list a {
+  color: var(--uik-brand);
+  text-decoration: none;
+}
+
+.uik-etdemo_alerts .alr-list a:hover {
+  text-decoration: underline;
+}
+
+.uik-etdemo_alerts .alr-empty {
+  margin: 0;
+  padding: 18px 20px;
+  border: 1px dashed var(--uik-line);
+  border-radius: var(--alr-radius);
+  background: var(--uik-surface);
+  color: var(--uik-ink-soft);
+}
+
+/* The acknowledge button is a chip, but it is the only chip on the screen that changes data, so
+ * it reads as an action instead of as a filter. */
+.uik-etdemo_alerts .alr-list .uik-chip[data-ack] {
+  border-color: color-mix(in srgb, var(--uik-brand) 45%, var(--uik-line));
+  color: var(--uik-brand);
+  font-weight: 600;
+}
+
+/* uik-busy already blocks pointer events on every region while a request is in flight; this only
+ * makes the pending row look like the reason. */
+.uik-etdemo_alerts.uik-busy .alr-list .uik-chip[data-ack] {
+  color: var(--uik-flat);
+  border-color: var(--uik-line);
+}
