@@ -1,0 +1,34 @@
+{
+  "view": "ETOKRS_Review",
+  "source": "com.etendoerp.uikit.samples/src/com/etendoerp/uikit/samples/okr/templates/ETOKRS_Review.ftl",
+  "classpath": "/com/etendoerp/uikit/samples/okr/templates/ETOKRS_Review.ftl",
+  "comment": "Order is load order. The runtime must come first, styles before the app renders, labels before anything calls OB.UIKit.t.",
+  "sourceComment": "El bundle es un artefacto de build, no un archivo escrito a mano en WEB-INF/classes. src/build.xml (postsrc.modules) copia modules/*/src/** sin los .java a WEB-INF/classes quitando el prefijo <modulo>/src, asi que \"classpath\" tiene que ser exactamente \"source\" a partir de /src: eso es lo que entrega smartbuild y lo que sobrevive a un redespliegue del war.",
+  "bundle": [
+    {
+      "type": "js",
+      "path": "com.etendoerp.uikit/web/com.etendoerp.uikit/js/uikit.js"
+    },
+    {
+      "type": "css",
+      "key": "com.etendoerp.uikit",
+      "path": "com.etendoerp.uikit/web/com.etendoerp.uikit/css/uikit.css"
+    },
+    {
+      "type": "css",
+      "key": "com.etendoerp.uikit.samples.okr",
+      "path": "com.etendoerp.uikit.samples/web/com.etendoerp.uikit.samples/css/okr-review.css"
+    },
+    {
+      "type": "labels",
+      "prefixes": [
+        "ETUIK_",
+        "ETOKRS_"
+      ]
+    },
+    {
+      "type": "js",
+      "path": "com.etendoerp.uikit.samples/web/com.etendoerp.uikit.samples/js/okr-review.js"
+    }
+  ]
+}
