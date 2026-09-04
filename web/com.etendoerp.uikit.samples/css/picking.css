@@ -1,0 +1,273 @@
+/*
+ * ETDEMO_Picking stylesheet. Everything is scoped under .uik-etdemo_picking, the class the
+ * runtime puts on this window's own root, so nothing here can reach Classic's chrome or another
+ * uikit window.
+ *
+ * The tables, the chips, the pager, the badges and the meter are .uik-table, .uik-chip,
+ * .uik-pager, .uik-badge and .uik-meter from uikit.css and are not restyled. What is here is only
+ * what a screen that can change a document needs and a read-only list does not:
+ *
+ *  - a two-column split that puts the order selector beside the line detail, because the reader
+ *    picks an order and then reads its lines, and losing the list on every click would make the
+ *    comparison the screen exists for impossible;
+ *  - a visual gap between the simulate control and the armed one wide enough that no click
+ *    intended for the first can land on the second, plus a colour for the armed button that
+ *    exists nowhere else in the kit;
+ *  - a line row tinted by the semaphore its own datasource computed, so the eye finds the short
+ *    line before it reads the numbers.
+ *
+ * Every colour is a --uik-* token. A raw hex here would drift away from the runtime's palette the
+ * first time the palette changes, and this window would be the only one on screen that did not.
+ */
+
+.uik-etdemo_picking {
+  --pck-radius: 7px;
+  --pck-gap: 14px;
+}
+
+/* ------------------------------------------------------------------ the bar */
+
+.uik-etdemo_picking .pck-bar {
+  margin-bottom: var(--pck-gap);
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--uik-line);
+}
+
+.uik-etdemo_picking .pck-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.uik-etdemo_picking .pck-intro,
+.uik-etdemo_picking .pck-asof {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--uik-ink-soft);
+}
+
+.uik-etdemo_picking .pck-target {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  font-size: 13px;
+}
+
+.uik-etdemo_picking .pck-result {
+  margin: var(--pck-gap) 0 4px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--uik-ink-soft);
+}
+
+/* --------------------------------------------------------- simulate and arm */
+
+.uik-etdemo_picking .pck-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* The simulation is the primary control, so it is the one that looks like a button you press
+ * without thinking. That is the correct habit to build: it cannot change anything. */
+.uik-etdemo_picking .pck-dry {
+  font-weight: 600;
+  border-color: var(--uik-brand);
+  color: var(--uik-brand);
+}
+
+/* The armed strip. Its left border and tint say this row is not the row that was here a
+ * moment ago, the only warning that survives a reader who never reads warnings. */
+.uik-etdemo_picking .pck-live {
+  padding: 8px 10px;
+  border-left: 3px solid var(--uik-bad);
+  border-radius: var(--pck-radius);
+  background: color-mix(in srgb, var(--uik-bad) 8%, var(--uik-surface));
+}
+
+/* The one control in the kit that mutates an ERP document, and the only filled-danger button in
+ * it. The extra margin is not decoration: it is the distance a mis-aimed click has to cross. */
+.uik-etdemo_picking .pck-danger {
+  margin-left: 12px;
+  padding: 5px 14px;
+  border: 1px solid var(--uik-bad);
+  border-radius: var(--pck-radius);
+  background: var(--uik-bad);
+  color: var(--uik-surface);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.uik-etdemo_picking .pck-danger:hover {
+  filter: brightness(0.92);
+}
+
+.uik-etdemo_picking .pck-armed,
+.uik-etdemo_picking .pck-hint {
+  font-size: 12px;
+}
+
+/* ------------------------------------------------------------- the verdict */
+
+.uik-etdemo_picking .pck-verdict {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.uik-etdemo_picking .pck-delta,
+.uik-etdemo_picking .pck-allowed,
+.uik-etdemo_picking .pck-erp {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+
+/* The ERP's own sentence, marked as a quotation because that is what it is: core's words, not
+ * this window's. Nothing restyles it into a heading or an alert. */
+.uik-etdemo_picking .pck-msg {
+  font-style: normal;
+  padding: 2px 8px;
+  border-left: 2px solid var(--uik-line);
+  color: var(--uik-ink);
+}
+
+.uik-etdemo_picking .pck-fail .pck-msg {
+  border-left-color: var(--uik-bad);
+}
+
+/* ------------------------------------------------- selector beside detail */
+
+.uik-etdemo_picking {
+  display: grid;
+  grid-template-columns: minmax(320px, 42%) minmax(0, 1fr);
+  grid-template-areas: 'bar bar' 'list detail';
+  gap: 0 var(--pck-gap);
+  align-items: start;
+}
+
+.uik-etdemo_picking .uik-region-bar {
+  grid-area: bar;
+}
+
+.uik-etdemo_picking .uik-region-list {
+  grid-area: list;
+  min-width: 0;
+  max-height: 62vh;
+  overflow: auto;
+}
+
+.uik-etdemo_picking .uik-region-detail {
+  grid-area: detail;
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .uik-etdemo_picking {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 'bar' 'list' 'detail';
+  }
+
+  .uik-etdemo_picking .uik-region-list {
+    max-height: none;
+  }
+}
+
+/* ----------------------------------------------------------------- selector */
+
+.uik-etdemo_picking .pck-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.uik-etdemo_picking .pck-input {
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 8px;
+  padding: 5px 8px;
+  border: 1px solid var(--uik-line);
+  border-radius: var(--pck-radius);
+  background: var(--uik-surface);
+  color: var(--uik-ink);
+  font: inherit;
+}
+
+/* The order number is a control, not a link: it changes this screen's selection and navigates
+ * nowhere, so it must not look like the drill-down in the detail header, which does. */
+.uik-etdemo_picking .pck-pick {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--uik-brand);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.uik-etdemo_picking tr[aria-selected='true'] {
+  background: color-mix(in srgb, var(--uik-brand) 10%, var(--uik-surface));
+}
+
+.uik-etdemo_picking .pck-next {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--uik-ink-soft);
+}
+
+.uik-etdemo_picking .pck-matched,
+.uik-etdemo_picking .pck-none {
+  font-size: 12px;
+  color: var(--uik-ink-soft);
+}
+
+.uik-etdemo_picking .pck-none {
+  margin: 8px 0;
+}
+
+/* ------------------------------------------------------------- line detail */
+
+.uik-etdemo_picking .pck-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.uik-etdemo_picking .pck-sem {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0;
+  font-size: 12px;
+}
+
+/* The semaphore, tinted from the tone the datasource computed. A service line is grey rather
+ * than green: it has no stock to be short of, and painting it as available would claim an
+ * availability nobody measured. */
+.uik-etdemo_picking .pck-lines tr[data-tone='ok'] {
+  background: color-mix(in srgb, var(--uik-ok) 7%, transparent);
+}
+
+.uik-etdemo_picking .pck-lines tr[data-tone='partial'] {
+  background: color-mix(in srgb, var(--uik-risk) 9%, transparent);
+}
+
+.uik-etdemo_picking .pck-lines tr[data-tone='short'] {
+  background: color-mix(in srgb, var(--uik-bad) 9%, transparent);
+}
+
+.uik-etdemo_picking .pck-lines tr[data-tone='na'] td {
+  color: var(--uik-ink-soft);
+}
