@@ -254,11 +254,15 @@
     },
 
     // The pending search must not fire into a DOM that is already gone.
-    destroy: function (s) {
-      var fn = searchers.get(s);
+    //
+    // The hook receives the ctx, not the state, and uikCtx() builds a fresh object on every
+    // call -- so the WeakMap has to be keyed on ctx.state, the one identity that survives. Read
+    // with the ctx as the key this returned undefined and the debounce was never cancelled.
+    destroy: function (ctx) {
+      var fn = searchers.get(ctx.state);
       if (fn) {
         fn.cancel();
-        searchers.delete(s);
+        searchers.delete(ctx.state);
       }
     }
   });
