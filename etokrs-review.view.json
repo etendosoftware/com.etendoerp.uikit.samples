@@ -1,5 +1,6 @@
 {
   "view": "ETOKRS_Review",
+  "module": "com.etendoerp.uikit.samples",
   "source": "com.etendoerp.uikit.samples/src/com/etendoerp/uikit/samples/okr/templates/ETOKRS_Review.ftl",
   "classpath": "/com/etendoerp/uikit/samples/okr/templates/ETOKRS_Review.ftl",
   "comment": "Order is load order. The runtime must come first, styles before the app renders, labels before anything calls OB.UIKit.t.",
@@ -30,5 +31,36 @@
       "type": "js",
       "path": "com.etendoerp.uikit.samples/web/com.etendoerp.uikit.samples/js/okr-review.js"
     }
-  ]
+  ],
+  "datasources": [
+    {
+      "action": "com.etendoerp.uikit.samples.okr.ReviewTree",
+      "params": {
+        "cycle": "null",
+        "dept": "all"
+      },
+      "requires": [
+        "cycles",
+        "cycle",
+        "depts",
+        "deptStats",
+        "objs",
+        "krs"
+      ]
+    },
+    {
+      "action": "com.etendoerp.uikit.samples.okr.Checkins",
+      "params": {
+        "cycle": "null",
+        "dept": "all"
+      },
+      "requires": [
+        "checkins"
+      ]
+    }
+  ],
+  "writes": [],
+  "writesComment": "ETOKRS_Review es de solo lectura: no expone ningun ActionHandler de escritura, asi que W7 no tiene nada que probar y reporta SKIP.",
+  "checks": "com.etendoerp.uikit.samples/verify/etokrs-review.checks.mjs",
+  "checksComment": "Los gates propios de esta ventana (contrato del arbol, filtro en SQL, aritmetica de la seccion 5). El contrato de ctx esta documentado arriba de verify/check-window.mjs."
 }
