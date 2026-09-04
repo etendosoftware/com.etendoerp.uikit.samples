@@ -165,12 +165,25 @@
   overflow: auto;
 }
 
+/*
+ * Both tables are wide -- seven columns in the selector, eight in the line list -- and each one
+ * scrolls inside its own region rather than pushing the page sideways. Without this the line table
+ * simply spilled out of a 351px detail pane: overflow-x defaults to visible, so the columns were
+ * drawn outside the panel with no way to reach them.
+ */
 .uik-etdemo_picking .uik-region-detail {
   grid-area: detail;
   min-width: 0;
+  overflow-x: auto;
 }
 
-@media (max-width: 900px) {
+/*
+ * Side by side needs about 1490px of content width: the selector wants ~775 and the line list
+ * ~685. Below that the two tracks only clip each other, and a column the reader cannot see is a
+ * worse outcome than a scroll -- so up to 1500px viewport the regions stack and each one gets the
+ * full width it asks for. Above it, the documented selector-beside-detail layout applies.
+ */
+@media (max-width: 1500px) {
   .uik-etdemo_picking {
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas: 'bar' 'list' 'detail';

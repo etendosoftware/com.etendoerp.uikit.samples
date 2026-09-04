@@ -208,8 +208,12 @@
             <b>${order.documentNo}</b> ${statusBadge(order.status)}
             <span>${order.bp}</span>
           </div>${controls(s, order)}`
-        : html`<p class="pck-none">${s.order
-            ? K.t('ETDEMO_PickingGone') : K.t('ETDEMO_PickingChoose')}</p>`}
+        : s.order
+          /* Solo el aviso de "ya no es visible", que explica por que faltan los controles. La
+             invitacion a elegir la da el panel de detalle: decirla dos veces en la misma
+             pantalla no invita el doble, solo ocupa dos renglones. */
+          ? html`<p class="pck-none">${K.t('ETDEMO_PickingGone')}</p>`
+          : ''}
       <h3 class="pck-result">${K.t('ETDEMO_PickingResult')}</h3>
       ${verdict(s)}
     </div>`;
