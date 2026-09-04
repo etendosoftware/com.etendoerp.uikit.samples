@@ -1,0 +1,64 @@
+{
+  "view": "ETDEMO_Cash",
+  "module": "com.etendoerp.uikit.samples",
+  "source": "com.etendoerp.uikit.samples/src/com/etendoerp/uikit/samples/cash/templates/ETDEMO_Cash.ftl",
+  "classpath": "/com/etendoerp/uikit/samples/cash/templates/ETDEMO_Cash.ftl",
+  "comment": "Order is load order. The runtime must come first, styles before the app renders, labels before anything calls OB.UIKit.t.",
+  "sourceComment": "El bundle es un artefacto de build: src/build.xml (postsrc.modules) copia modules/*/src/** sin los .java a WEB-INF/classes quitando el prefijo <modulo>/src, asi que \"classpath\" es exactamente \"source\" a partir de /src. El .ftl lo escribe deploy-view.mjs, nunca la mano.",
+  "bundle": [
+    {
+      "type": "js",
+      "path": "com.etendoerp.uikit/web/com.etendoerp.uikit/js/uikit.js"
+    },
+    {
+      "type": "css",
+      "key": "com.etendoerp.uikit",
+      "path": "com.etendoerp.uikit/web/com.etendoerp.uikit/css/uikit.css"
+    },
+    {
+      "type": "css",
+      "key": "com.etendoerp.uikit.samples.cash",
+      "path": "com.etendoerp.uikit.samples/web/com.etendoerp.uikit.samples/css/cash-portfolio.css"
+    },
+    {
+      "type": "labels",
+      "prefixes": [
+        "ETUIK_",
+        "ETDEMO_"
+      ]
+    },
+    {
+      "type": "js",
+      "path": "com.etendoerp.uikit.samples/web/com.etendoerp.uikit.samples/js/cash-portfolio.js"
+    }
+  ],
+  "labelsComment": "Los dos prefijos: ETUIK_ son los textos del runtime (vacio, error, reintentar) y ETDEMO_ los de esta ventana. Se hornean en el bundle en tiempo de despliegue, asi que una etiqueta nueva exige volver a ejecutar deploy-view.mjs.",
+  "datasources": [
+    {
+      "action": "com.etendoerp.uikit.samples.cash.Portfolio",
+      "params": {
+        "side": "AP"
+      },
+      "requires": [
+        "asOf",
+        "asOfSource",
+        "side",
+        "sides",
+        "currencies",
+        "currency",
+        "excluded",
+        "buckets",
+        "total",
+        "partners",
+        "rows",
+        "series",
+        "meta"
+      ]
+    }
+  ],
+  "datasourcesComment": "Un solo datasource: los tramos, el total y la serie se calculan sobre todo el lado y el detalle sobre el tramo elegido, pero todo sale de la misma consulta con el mismo asOf, y partirlo en dos peticiones permitiria que las dos mitades de la pantalla hablasen de fechas distintas.",
+  "writes": [],
+  "writesComment": "ETDEMO_Cash es de solo lectura: una cartera es una foto del dato, no un sitio donde se edita. No expone ningun ActionHandler de escritura, asi que W7 no tiene nada que probar y reporta SKIP.",
+  "checks": "com.etendoerp.uikit.samples/verify/etdemo-cash.checks.mjs",
+  "checksComment": "Gates propios de esta ventana: aritmetica de los tramos recalculada en SQL (W5), contrato de asOf (W6), invariancia de los tramos frente al tramo seleccionado (W7 esta reservado, asi que este es W8), exclusion de otras monedas (W9) y los doce meses sin huecos (W10)."
+}
