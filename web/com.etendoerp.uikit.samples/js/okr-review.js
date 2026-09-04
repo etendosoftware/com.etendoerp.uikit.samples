@@ -377,6 +377,9 @@
     name: 'ETOKRS_Review',
     title: 'ETOKRS_ReviewTitle',
     regions: ['filters', 'rail', 'agenda', 'panel'],
+    // The first-load block goes in the rail, not in the first region: the filter bar is the one
+    // piece of chrome that is worth painting before the data arrives.
+    loading: 'rail',
     keepScroll: ['panel'],
     state: { cycle: null, dept: 'all', tab: 'obj', sort: 'pace', open: {} },
     data: { tree: 'ETOKRS_ReviewTree', updates: 'ETOKRS_Checkins' },
