@@ -1,0 +1,317 @@
+/*
+ * ETDEMO_Cash stylesheet. Every rule is scoped under .uik-etdemo_cash, the class the runtime puts
+ * on this window's root, so nothing here can reach Classic's chrome or the other sample windows.
+ *
+ * The primitives -- .uik-bars, .uik-spark, .uik-table, .uik-chip -- are styled by uikit.css and are
+ * not restyled here; that file is frozen and shared. What lives here is this window's layout and
+ * the two small overrides its layout needs. Colours come from the --uik-* tokens only: a raw hex
+ * in a window stylesheet is a theme that stops matching the framework the day the theme changes.
+ */
+
+.uik-etdemo_cash {
+  --cash-radius: 7px;
+  --cash-shadow: 0 1px 2px rgba(22, 32, 43, 0.06);
+}
+
+/* ------------------------------------------------------------------- shell
+ * The rail (aging) and the series read as one instrument panel, so they sit side by side on a wide
+ * screen while the filter bar and the detail table span the full width. Regions are siblings of
+ * the root, which is why the grid is declared on the root and the framework's stacking margin is
+ * neutralised here rather than in uikit.css.
+ */
+
+@media (min-width: 900px) {
+  .uik-etdemo_cash {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 14px;
+    align-items: start;
+  }
+
+  .uik-etdemo_cash > .uik-region + .uik-region {
+    margin-top: 0;
+  }
+
+  .uik-etdemo_cash > .uik-region-filters,
+  .uik-etdemo_cash > .uik-region-detail {
+    grid-column: 1 / -1;
+  }
+}
+
+.uik-etdemo_cash .cash-panel {
+  padding: 12px 14px;
+  border: 1px solid var(--uik-line);
+  border-radius: var(--cash-radius);
+  background: var(--uik-surface);
+  box-shadow: var(--cash-shadow);
+}
+
+.uik-etdemo_cash .cash-h2 {
+  margin: 0 0 10px;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--uik-ink-soft);
+}
+
+.uik-etdemo_cash .cash-h2 span {
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.uik-etdemo_cash .cash-note {
+  margin: 8px 0 0;
+  color: var(--uik-ink-soft);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* --------------------------------------------------------------- filter bar */
+
+.uik-etdemo_cash .cash-bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.uik-etdemo_cash .cash-seg {
+  display: inline-flex;
+  border: 1px solid var(--uik-line);
+  border-radius: var(--cash-radius);
+  background: var(--uik-surface);
+  overflow: hidden;
+}
+
+.uik-etdemo_cash .cash-seg-item {
+  appearance: none;
+  border: 0;
+  border-left: 1px solid var(--uik-line);
+  background: transparent;
+  padding: 5px 14px;
+  font: inherit;
+  text-align: left;
+  color: var(--uik-ink-soft);
+  cursor: pointer;
+}
+
+.uik-etdemo_cash .cash-seg-item:first-child {
+  border-left: 0;
+}
+
+.uik-etdemo_cash .cash-seg-item span {
+  display: block;
+  font-weight: 600;
+}
+
+.uik-etdemo_cash .cash-seg-item em {
+  display: block;
+  font-style: normal;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.uik-etdemo_cash .cash-seg-item[aria-pressed="true"] {
+  background: color-mix(in srgb, var(--uik-brand) 10%, var(--uik-surface));
+  color: var(--uik-brand);
+}
+
+.uik-etdemo_cash .cash-chips {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* The reference-date chip states a fact, it is not a control: same shape, no pointer. */
+.uik-etdemo_cash .cash-asof {
+  cursor: default;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.uik-etdemo_cash .cash-asof strong {
+  color: var(--uik-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.uik-etdemo_cash .cash-asof em {
+  font-style: normal;
+  color: var(--uik-flat);
+  font-size: 11px;
+}
+
+/* ------------------------------------------------------------- the imbalance */
+
+.uik-etdemo_cash .cash-why {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-left: 3px solid var(--uik-flat);
+  background: var(--uik-ground);
+  border-radius: 0 var(--cash-radius) var(--cash-radius) 0;
+}
+
+.uik-etdemo_cash .cash-why p {
+  margin: 0;
+  color: var(--uik-ink);
+  font-size: 12px;
+  line-height: 1.55;
+  max-width: 92ch;
+}
+
+.uik-etdemo_cash .cash-why-list {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  gap: 8px 24px;
+  flex-wrap: wrap;
+  color: var(--uik-ink-soft);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.uik-etdemo_cash .cash-why-list .is-on {
+  color: var(--uik-brand);
+}
+
+.uik-etdemo_cash .cash-why-list b {
+  color: inherit;
+}
+
+/* ---------------------------------------------------------------- aging rail */
+
+.uik-etdemo_cash .cash-total {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 12px 0 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--uik-line);
+  color: var(--uik-ink-soft);
+  font-size: 12px;
+}
+
+.uik-etdemo_cash .cash-total strong {
+  margin-left: auto;
+  color: var(--uik-ink);
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+}
+
+.uik-etdemo_cash .cash-total em {
+  font-style: normal;
+  color: var(--uik-flat);
+  font-variant-numeric: tabular-nums;
+}
+
+.uik-etdemo_cash .cash-panel > .cash-chips {
+  margin-top: 12px;
+}
+
+/* -------------------------------------------------------------- cash series */
+
+.uik-etdemo_cash .cash-spark {
+  color: var(--uik-brand);
+  padding: 4px 0;
+}
+
+.uik-etdemo_cash .cash-spark .uik-spark {
+  width: 100%;
+  height: auto;
+}
+
+.uik-etdemo_cash .cash-axis {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 6px 0 0;
+  color: var(--uik-ink-soft);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.uik-etdemo_cash .cash-axis em {
+  font-style: normal;
+  color: var(--uik-flat);
+}
+
+/* ---------------------------------------------------------------- the detail */
+
+.uik-etdemo_cash .cash-tablewrap {
+  overflow-x: auto;
+}
+
+.uik-etdemo_cash .uik-table em {
+  display: block;
+  font-style: normal;
+  font-size: 11px;
+  color: var(--uik-flat);
+}
+
+.uik-etdemo_cash .cash-pbtn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font: inherit;
+  font-weight: 600;
+  color: var(--uik-brand);
+  text-align: left;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.uik-etdemo_cash .cash-caret {
+  width: 0;
+  height: 0;
+  border-left: 4px solid currentColor;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  transition: transform 120ms ease;
+}
+
+.uik-etdemo_cash .cash-prow.is-open .cash-caret {
+  transform: rotate(90deg) translateX(1px);
+}
+
+.uik-etdemo_cash .cash-drow > td {
+  padding: 0 0 0 26px;
+  background: var(--uik-ground);
+}
+
+.uik-etdemo_cash .cash-docs {
+  background: transparent;
+  font-size: 12px;
+}
+
+.uik-etdemo_cash .cash-docs th {
+  border-bottom-style: dashed;
+}
+
+.uik-etdemo_cash .cash-docs a {
+  color: var(--uik-brand);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.uik-etdemo_cash .cash-docs a:hover {
+  text-decoration: underline;
+}
+
+/* A document reference with no resolvable tab is shown, not linked, and looks unavailable. */
+.uik-etdemo_cash .cash-docs span[title] {
+  border-bottom: 1px dotted var(--uik-flat);
+  cursor: help;
+}
