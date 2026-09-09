@@ -1,0 +1,94 @@
+{
+  "view": "ETDEMO_Product360",
+  "module": "com.etendoerp.uikit.samples",
+  "source": "com.etendoerp.uikit.samples/src/com/etendoerp/uikit/samples/product360/templates/ETDEMO_Product360.ftl",
+  "classpath": "/com/etendoerp/uikit/samples/product360/templates/ETDEMO_Product360.ftl",
+  "comment": "Order is load order. The runtime must come first, styles before the app renders, labels before anything calls OB.UIKit.t.",
+  "bundle": [
+    {
+      "type": "js",
+      "path": "com.etendoerp.uikit/web/com.etendoerp.uikit/js/uikit.js"
+    },
+    {
+      "type": "css",
+      "key": "com.etendoerp.uikit",
+      "path": "com.etendoerp.uikit/web/com.etendoerp.uikit/css/uikit.css"
+    },
+    {
+      "type": "css",
+      "key": "com.etendoerp.uikit.samples.product360",
+      "path": "com.etendoerp.uikit.samples/web/com.etendoerp.uikit.samples/css/product-360.css"
+    },
+    {
+      "type": "labels",
+      "prefixes": [
+        "ETDEMO_",
+        "ETUIK_"
+      ]
+    },
+    {
+      "type": "js",
+      "path": "com.etendoerp.uikit.samples/web/com.etendoerp.uikit.samples/js/product-360.js"
+    }
+  ],
+  "datasources": [
+    {
+      "action": "com.etendoerp.uikit.samples.product360.ProductIndex",
+      "params": {
+        "q": "",
+        "categoryId": "",
+        "warehouseId": "",
+        "sort": "",
+        "page": "1",
+        "limit": "20"
+      },
+      "requires": [
+        "rows",
+        "categories",
+        "warehouses",
+        "page",
+        "meta"
+      ]
+    },
+    {
+      "action": "com.etendoerp.uikit.samples.product360.ProductStock",
+      "params": {
+        "itemId": "",
+        "warehouseId": ""
+      },
+      "requires": [
+        "head",
+        "totals",
+        "worth",
+        "warehouses",
+        "locators",
+        "lots",
+        "peers",
+        "pending",
+        "meta"
+      ]
+    },
+    {
+      "action": "com.etendoerp.uikit.samples.product360.ProductLedger",
+      "params": {
+        "itemId": "",
+        "warehouseId": "",
+        "grain": "",
+        "page": "1",
+        "limit": "20"
+      },
+      "requires": [
+        "series",
+        "mix",
+        "trail",
+        "page",
+        "meta"
+      ]
+    }
+  ],
+  "datasourcesComment": "Tres datasources porque la ventana tiene tres alias perezosos, cada uno con su when(): index siempre -- es el carril desde el que se elige --, item y ledger solo con producto elegido. Los params declarados aqui no llevan ningun m_product_id: un id de esta instancia en un fichero versionado caduca en la siguiente. Asi W4 comprueba justo lo que le toca -- que las tres respuestas traen su envoltorio completo incluso en la forma neutra, sin producto -- y el plugin de checks descubre un producto real por el indice y ejercita las formas cargadas.",
+  "writes": [],
+  "writesComment": "ETDEMO_Product360 es de solo lectura: el stock de un producto se mira desde todos sus ejes, y lo que lo mueve se edita en su ventana estandar, a la que se llega con OB.UIKit.nav. No expone ningun ActionHandler de escritura, asi que W7 no tiene nada que probar y reporta SKIP.",
+  "checks": "com.etendoerp.uikit.samples/verify/etdemo-product360.checks.mjs",
+  "checksComment": "Gates propios: que el saldo de cierre del rastro cuadre con el disponible de la cabecera (W5), que el reparto por almacen ignore a proposito el filtro de almacen mientras el resto de paneles lo respeta (W6), que la busqueda y la paginacion del carril ocurran en servidor (W8), la forma neutra de item y ledger sin producto (W9) y que los ad_tab_id de las cinco ventanas a las que abre el rastro sean reales y distintos (W10)."
+}
