@@ -1,6 +1,6 @@
 # Etendo UI Kit — Samples
 
-Las ventanas de referencia de `com.etendoerp.uikit`: seis ventanas de Etendo Classic construidas
+Las ventanas de referencia de `com.etendoerp.uikit`: siete ventanas de Etendo Classic construidas
 sobre el runtime `OB.UIKit`, sin una linea de Java de vista y sin tocar core.
 
 | vista | de que es | datos |
@@ -9,6 +9,7 @@ sobre el runtime `OB.UIKit`, sin una linea de Java de vista y sin tocar core.
 | `ETDEMO_Stock` | pivot producto x almacen | `m_storage_detail` |
 | `ETDEMO_Cash` | cartera AR/AP con aging | `fin_payment_schedule`, `fin_payment` |
 | `ETDEMO_Partner360` | ficha de tercero | `c_order`, `c_invoice`, `fin_payment` |
+| `ETDEMO_Product360` | 360 del stock de un producto | `m_storage_detail`, `m_transaction`, `m_attributesetinstance` |
 | `ETDEMO_Alerts` | bandeja del administrador | `ad_alert` |
 | `ETDEMO_Picking` | preparacion de pedidos + Confirmar | `c_order`, `c_orderline` |
 

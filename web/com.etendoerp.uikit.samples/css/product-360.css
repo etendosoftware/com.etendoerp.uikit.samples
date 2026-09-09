@@ -1,0 +1,1524 @@
+/*
+ * ETDEMO_Product360 -- one product, every dimension of its stock.
+ *
+ * Everything is scoped with .uik-etdemo_product360, which is the root class the runtime puts on
+ * this window and nowhere else: it writes `uik uik-<view id lowercased>`, so nothing here can
+ * reach Classic's chrome, the Modern Skin's own surfaces or another demo of this module.
+ *
+ * No colour is written literally. The blue of action and focus is --uik-brand, cards are
+ * --uik-surface on --uik-ground, borders are --uik-line, and the states borrow --uik-ok /
+ * --uik-risk / --uik-bad. When the Modern Skin repaints those tokens, this window repaints with
+ * it -- which is the whole reason the skin and the kit agree on a token vocabulary.
+ *
+ * The window's own vocabulary is prefixed pr360-, and its own tokens --pr360-*, because
+ * ETDEMO_Partner360 already owns p360-. .uik-table, .uik-pager and .uik-bars come from uikit.css;
+ * what is here is only what this screen needs and a plain list does not.
+ */
+
+.uik-etdemo_product360 {
+  --pr360-radius: 8px;
+  --pr360-radius-sm: 6px;
+  --pr360-gap: 16px;
+  --pr360-gap-sm: 8px;
+  --pr360-tap: 36px; /* alto minimo de cualquier control */
+}
+
+/* --------------------------------------------------------------- cabecera */
+
+.uik-etdemo_product360 .pr360-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--pr360-gap-sm) var(--pr360-gap);
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--uik-brand);
+}
+
+.uik-etdemo_product360 .pr360-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--uik-ink);
+}
+
+.uik-etdemo_product360 .pr360-subtitle {
+  flex: 1 1 260px;
+  margin: 0;
+  color: var(--uik-ink-soft);
+}
+
+.uik-etdemo_product360 .pr360-brand {
+  margin-left: auto;
+  padding: 2px 10px;
+  border: 1px solid var(--uik-line);
+  border-radius: 999px;
+  background: var(--uik-surface);
+  color: var(--uik-brand);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/*
+ * Auto-fit rather than a fixed column count: the tiles reflow on their own from a phone-width pane
+ * to a wide desk without a media query deciding for them.
+ */
+.uik-etdemo_product360 .pr360-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--pr360-gap-sm);
+}
+
+.uik-etdemo_product360 .pr360-tile {
+  padding: 14px 16px;
+  border: 1px solid var(--uik-line);
+  border-left: 3px solid var(--uik-brand);
+  border-radius: var(--pr360-radius);
+  background: var(--uik-surface);
+}
+
+.uik-etdemo_product360 .pr360-tile-label {
+  margin: 0 0 4px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--uik-ink-soft);
+}
+
+.uik-etdemo_product360 .pr360-tile-value {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  color: var(--uik-ink);
+}
+
+.uik-etdemo_product360 .pr360-tile-hint {
+  margin: 6px 0 0;
+  font-size: 11px;
+  color: var(--uik-ink-soft);
+}
+
+.uik-etdemo_product360 .pr360-asof {
+  margin: var(--pr360-gap-sm) 0 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--uik-brand);
+}
+
+.uik-etdemo_product360 .pr360-note {
+  margin: var(--pr360-gap-sm) 0 0;
+  max-width: 78ch;
+  font-size: 12px;
+  color: var(--uik-ink-soft);
+}
+
+/* ------------------------------------------------------- barra de filtros */
+
+/* Envuelve por defecto; si algo se desplaza, se desplaza dentro de su region, no el shell. */
+.uik-etdemo_product360 .pr360-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--pr360-gap-sm) var(--pr360-gap);
+  margin: var(--pr360-gap) 0 var(--pr360-gap-sm);
+  max-width: 100%;
+}
+
+/*
+ * El ancho vive en el envoltorio, no en el input: .pr360-field es un contenedor flex en columna, y
+ * un flex-basis puesto sobre el input se aplicaria a su ALTO -- que es exactamente lo que pasaba,
+ * un campo de busqueda de 260 px de alto.
+ */
+.uik-etdemo_product360 .pr360-field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 0 1 260px;
+  min-width: 170px;
+}
+
+.uik-etdemo_product360 .pr360-field-label,
+.uik-etdemo_product360 .pr360-chips-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--uik-ink-soft);
+}
+
+.uik-etdemo_product360 .pr360-input {
+  min-height: var(--pr360-tap);
+  padding: 4px 10px;
+  border: 1px solid var(--uik-line);
+  border-radius: var(--pr360-radius-sm);
+  background: var(--uik-surface);
+  color: var(--uik-ink);
+  font: inherit;
+}
+
+.uik-etdemo_product360 .pr360-input {
+  width: 100%;
+}
+
+.uik-etdemo_product360 .pr360-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.uik-etdemo_product360 .pr360-chip {
+  min-height: var(--pr360-tap);
+  padding: 0 12px;
+  border: 1px solid var(--uik-line);
+  border-radius: 999px;
+  background: var(--uik-surface);
+  color: var(--uik-ink-soft);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.uik-etdemo_product360 .pr360-chip:hover {
+  border-color: var(--uik-brand);
+  color: var(--uik-ink);
+}
+
+/* El activo no depende solo del color: cambia el peso y gana el relleno de marca. */
+.uik-etdemo_product360 .pr360-chip.on {
+  border-color: var(--uik-brand);
+  background: var(--uik-brand);
+  color: var(--uik-surface);
+  font-weight: 700;
+}
+
+/* ----------------------------------------------------------------- tabla */
+
+/* El scroll horizontal, cuando hace falta, es de la tabla y no del shell. */
+.uik-etdemo_product360 .pr360-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--uik-line);
+  border-radius: var(--pr360-radius);
+  background: var(--uik-surface);
+}
+
+.uik-etdemo_product360 .pr360-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.uik-etdemo_product360 .pr360-table th,
+.uik-etdemo_product360 .pr360-table td {
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--uik-line);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.uik-etdemo_product360 .pr360-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--uik-ground);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--uik-ink-soft);
+}
+
+.uik-etdemo_product360 .pr360-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.uik-etdemo_product360 .pr360-table tbody tr:hover {
+  background: var(--uik-ground);
+}
+
+/* La fila abierta se marca por borde y peso, no solo por tono. */
+.uik-etdemo_product360 .pr360-table tbody tr.on {
+  background: var(--uik-ground);
+  box-shadow: inset 3px 0 0 var(--uik-brand);
+}
+
+.uik-etdemo_product360 .pr360-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.uik-etdemo_product360 .pr360-cell-key {
+  font-weight: 600;
+}
+
+.uik-etdemo_product360 .pr360-uom {
+  color: var(--uik-ink-soft);
+  font-size: 11px;
+}
+
+.uik-etdemo_product360 .pr360-dash {
+  color: var(--uik-flat);
+}
+
+/* Un boton que se lee como enlace: no hay URL que seguir, abre el detalle en estado. */
+.uik-etdemo_product360 .pr360-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--uik-brand);
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.uik-etdemo_product360 .pr360-link:hover {
+  text-decoration: underline;
+}
+
+/* ----------------------------------------------------------------- pager */
+
+.uik-etdemo_product360 .pr360-pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--pr360-gap-sm);
+  margin-top: var(--pr360-gap-sm);
+}
+
+.uik-etdemo_product360 .pr360-page {
+  min-height: var(--pr360-tap);
+  padding: 0 14px;
+  border: 1px solid var(--uik-line);
+  border-radius: var(--pr360-radius-sm);
+  background: var(--uik-surface);
+  color: var(--uik-brand);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.uik-etdemo_product360 .pr360-page[disabled] {
+  color: var(--uik-flat);
+  cursor: default;
+}
+
+.uik-etdemo_product360 .pr360-page-of {
+  font-size: 12px;
+  color: var(--uik-ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.uik-etdemo_product360 .pr360-close {
+  min-height: var(--pr360-tap);
+  padding: 0 12px;
+  border: 1px solid var(--uik-line);
+  border-radius: var(--pr360-radius-sm);
+  background: var(--uik-surface);
+  color: var(--uik-ink-soft);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.uik-etdemo_product360 .pr360-close:hover {
+  border-color: var(--uik-brand);
+  color: var(--uik-ink);
+}
+
+/* ------------------------------------------------- estados de presentacion */
+
+.uik-etdemo_product360 .pr360-state {
+  padding: 20px 24px;
+  border: 1px solid var(--uik-line);
+  border-radius: var(--pr360-radius);
+  background: var(--uik-surface);
+}
+
+.uik-etdemo_product360 .pr360-state-title {
+  margin: 0 0 6px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--uik-ink);
+}
+
+.uik-etdemo_product360 .pr360-state-body {
+  margin: 0;
+  max-width: 62ch;
+  color: var(--uik-ink-soft);
+}
+
+.uik-etdemo_product360 .pr360-state-empty {
+  border-left: 3px solid var(--uik-flat);
+}
+
+/* ------------------------------------------------------- foco y accesibilidad */
+
+/* El foco se ve siempre: la navegacion por teclado es criterio de aceptacion, no un extra. */
+.uik-etdemo_product360 :focus-visible {
+  outline: 2px solid var(--uik-brand);
+  outline-offset: 2px;
+}
+
+/* -------------------------------------------------------------- responsive */
+
+/*
+ * Un solo corte, para tablet y para el zoom alto: la marca deja de empujarse a la derecha, los
+ * campos ocupan la fila entera y los paddings se achican. La grilla de tiles y las barras de
+ * filtros ya envuelven solas, asi que no necesitan reglas propias.
+ */
+@media (max-width: 820px) {
+  .uik-etdemo_product360 .pr360-brand {
+    margin-left: 0;
+  }
+
+  .uik-etdemo_product360 .pr360-field {
+    flex: 1 1 100%;
+  }
+
+  .uik-etdemo_product360 .pr360-state {
+    padding: 16px;
+  }
+
+  .uik-etdemo_product360 .pr360-table th,
+  .uik-etdemo_product360 .pr360-table td {
+    padding: 6px 8px;
+  }
+
+  
+  
+
+  
+
+  
+  
+
+  
+  
+}
+
+/* ==========================================================================
+ * Propuestas de lectura: Console, Locate y Flow
+ *
+ * Tres apuestas distintas sobre como se lee un almacen, montadas sobre los mismos read models que
+ * las cinco ventanas de arriba. Comparten este archivo a proposito: los tokens, la tabla, el pager
+ * y los estados ya estan resueltos, y una hoja aparte por propuesta las dejaria divergir justo
+ * mientras se estan comparando.
+ *
+ * Lo unico que cada propuesta aporta es su reparto del espacio. Todo lo demas -- colores, foco,
+ * alturas de control, tipografia -- lo hereda de las reglas anteriores sin redefinir nada.
+ * ========================================================================== */
+
+/* ------------------------------------------------------- vocabulario comun */
+
+/* Un dato secundario que acompana al principal en la misma celda o en el mismo renglon. */
+.uik-etdemo_product360 .pr360-sub {
+  display: block;
+  font-style: normal;
+  font-size: 11px;
+  color: var(--uik-ink-soft);
+}
+
+/* Un panel: la caja con la que Console y Locate agrupan algo que no es una tabla suelta. */
+.uik-etdemo_product360 .pr360-panel {
+  padding: 14px 16px;
+  border: 1px solid var(--uik-line);
+  border-radius: var(--pr360-radius);
+  background: var(--uik-surface);
+}
+
+.uik-etdemo_product360 .pr360-panel-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--pr360-gap-sm);
+  margin-bottom: var(--pr360-gap-sm);
+}
+
+.uik-etdemo_product360 .pr360-panel-title {
+  flex: 1 1 auto;
+  margin: 0 0 var(--pr360-gap-sm);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--uik-ink-soft);
+}
+
+/* El titulo dentro de una cabecera de panel ya lleva el margen de la cabecera. */
+.uik-etdemo_product360 .pr360-panel-head .pr360-panel-title {
+  margin-bottom: 0;
+}
+
+/*
+ * Un dato que esta pero no reclama nada: el pedido sin lineas pendientes dice cuantas tiene y lo
+ * dice en voz baja, para que el contraste lo siga guardando quien si tiene trabajo esperando.
+ */
+.uik-etdemo_product360 .pr360-quiet {
+  color: var(--uik-flat);
+}
+
+/*
+ * Barras con grupos de pastillas: se alinean ARRIBA. Con align-items:flex-end -- el valor de
+ * .pr360-bar, correcto cuando todos los campos son inputs de la misma altura -- un grupo de tres
+ * filas de pastillas estira su linea y el buscador queda pegado al fondo de ella: 84px de hueco
+ * encima del campo en Product 360, y otros 92 encima del tamano de pagina.
+ */
+.uik-etdemo_product360 .pr360-bar-p360 {
+  align-items: flex-start;
+}
+
+.uik-etdemo_product360 .pr360-field-wide {
+  flex: 1 1 320px;
+}
+
+/* ============================================================= Product 360
+ *
+ * La propuesta D no reparte una pantalla en paneles: pone un producto en el centro y alrededor
+ * todos los ejes que la base sabe cruzar. Por eso el reparto es de dos columnas y no de cuatro
+ * cuadrantes -- a la izquierda el carril desde el que se elige, a la derecha una pila de paneles
+ * que se lee de arriba abajo -- y por eso la columna izquierda es estrecha y fija: elegir el
+ * producto es un gesto que se repite, y leerlo es lo que ocupa el tiempo.
+ *
+ * Dos reglas de esta hoja mandan aqui y explican casi todo lo que sigue: la region es el nodo que
+ * desplaza (uikSetRegion lee su scrollTop, no el de un hijo) y ninguna clase escribe un color,
+ * solo tokens. La segunda tiene una consecuencia de diseno en el grafico: entrada y salida NO son
+ * verde y rojo. Una salida de almacen no es un error -- es un albaran cumplido -- asi que la
+ * direccion se distingue por el lado del eje del que crece la barra, y el tono solo separa las
+ * dos series: la marca para lo que entra, la tinta suave para lo que sale.
+ */
+
+/*
+ * El reparto. Las regiones son hijos directos de la raiz, asi que la rejilla se monta sobre
+ * ellas sin envoltorio propio.
+ *
+ * Tres columnas y no dos: una pila de diez paneles de 784px medía 4.506px, con cinco paneles
+ * cortos -- almacen 243, lote 163, mezcla 261, pares 613, cartera 633 -- ocupando un ancho que no
+ * necesitan mientras la columna izquierda estaba vacia desde y=1138. Los cortos van emparejados
+ * en dos parejas que dicen lo mismo cada una: DONDE ESTA (almacen | lote) y CON QUE SE COMPARA
+ * (los pares de su categoria | la cartera abierta). Los que llevan una tabla o el grafico se
+ * quedan a ancho completo, porque ahi el ancho es el dibujo.
+ *
+ * El carril y su pager comparten el area de las ocho filas de la derecha y se PEGAN: elegir el
+ * siguiente producto es el gesto que mas se repite, y sin pegarlos pedia volver 4.000px arriba.
+ * El area se declara 3/11 y no 3/-1 a proposito: la rejilla no declara grid-template-rows, asi
+ * que no hay rejilla explicita y -1 resuelve a la primera linea. Hay que actualizar el 11 si
+ * cambia el numero de regiones de la derecha (hoy ocho: filas 3 a 10).
+ *
+ * Que el carril se estire sobre filas vacias ya no importa -- align-items:start no lo estira y su
+ * max-height manda -- que es lo que hacia imposible abarcarlas cuando el pager iba en su
+ * propia fila.
+ */
+.uik-etdemo_product360 {
+  /*
+   * Un solo numero para el alto del carril: lo usa su max-height, el hueco que el pager reserva
+   * debajo y el top al que el pager se pega. 48vh y no 64: con la barra en tres lineas el carril
+   * empieza sobre y=353, y a 48vh de 900 (432px) acaba en 785 con su pager dentro del pliegue.
+   */
+  --pr360-rail: clamp(320px, 48vh, 720px);
+}
+
+@media (min-width: 1200px) {
+  .uik-etdemo_product360 {
+    display: grid;
+    grid-template-columns: minmax(280px, 340px) minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--pr360-gap-sm) var(--pr360-gap);
+    align-items: start;
+  }
+
+  /* La separacion entre regiones la pone el gap de la rejilla; el margen apilado sobraria. */
+  .uik-etdemo_product360 > .uik-region + .uik-region {
+    margin-top: 0;
+  }
+
+  .uik-etdemo_product360 > .uik-region-head,
+  .uik-etdemo_product360 > .uik-region-bar {
+    grid-column: 1 / -1;
+  }
+
+  .uik-etdemo_product360 > .uik-region-rail {
+    grid-column: 1;
+    grid-row: 3 / 11;
+    align-self: start;
+    position: sticky;
+    top: var(--pr360-gap);
+  }
+
+  /*
+   * El pager comparte el area del carril y se coloca bajo su ALTO MAXIMO, no bajo sus filas: asi
+   * no se le monta encima ni cuando el carril viene corto -- una busqueda con dos resultados --
+   * y se pega justo debajo de el. El precio es un hueco entre los dos en ese caso, que es mejor
+   * que escribir aqui el alto del pager.
+   *
+   * El selector repite .uik-region a proposito. El reset de arriba (> .uik-region + .uik-region)
+   * suma cuatro clases y este solo tres, asi que ganaba por especificidad y ponia el margen a
+   * cero: el pager se quedaba en la linea de la fila 3, y su sticky lo empujaba a 556px, encima
+   * del carril. Medido: pager [556, 612] dentro de un carril [355, 787].
+   */
+  .uik-etdemo_product360 > .uik-region.uik-region-pager {
+    grid-column: 1;
+    grid-row: 3 / 11;
+    align-self: start;
+    margin-top: calc(var(--pr360-rail) + var(--pr360-gap-sm));
+    position: sticky;
+    top: calc(var(--pr360-gap) + var(--pr360-rail) + var(--pr360-gap-sm));
+  }
+
+  /* Ancho completo de la derecha: la ficha, el libro, la mezcla, los sitios y el rastro. */
+  .uik-etdemo_product360 > .uik-region-hero {
+    grid-column: 2 / -1;
+    grid-row: 3;
+  }
+
+  .uik-etdemo_product360 > .uik-region-ledger {
+    grid-column: 2 / -1;
+    grid-row: 4;
+  }
+
+  .uik-etdemo_product360 > .uik-region-mix {
+    grid-column: 2 / -1;
+    grid-row: 5;
+  }
+
+  .uik-etdemo_product360 > .uik-region-locators {
+    grid-column: 2 / -1;
+    grid-row: 7;
+  }
+
+  .uik-etdemo_product360 > .uik-region-trail {
+    grid-column: 2 / -1;
+    grid-row: 9;
+  }
+
+  .uik-etdemo_product360 > .uik-region-tpager {
+    grid-column: 2 / -1;
+    grid-row: 10;
+  }
+
+  /* Las dos parejas. Si falta un miembro -- sin lotes, sin cartera -- el otro se queda en su
+   * columna y la casilla vecina queda en blanco: .uik-region:empty no se dibuja. */
+  .uik-etdemo_product360 > .uik-region-warehouses {
+    grid-column: 2;
+    grid-row: 6;
+  }
+
+  .uik-etdemo_product360 > .uik-region-lots {
+    grid-column: 3;
+    grid-row: 6;
+  }
+
+  .uik-etdemo_product360 > .uik-region-peers {
+    grid-column: 2;
+    grid-row: 8;
+  }
+
+  .uik-etdemo_product360 > .uik-region-pending {
+    grid-column: 3;
+    grid-row: 8;
+  }
+}
+
+/*
+ * Apilado, la ficha va delante del carril.
+ *
+ * Su estado vacio ES la instruccion ("elige un producto"), asi que la respuesta aparece donde
+ * estaba la pregunta. Sin esto, en una pantalla de 768 lo unico que cambiaba al pulsar un
+ * producto era el borde azul de su renglon: la ficha quedaba 500px por debajo del pliegue. Es el
+ * mismo arreglo que Console acepto en la ronda 3, y solo cambia el orden VISUAL -- el DOM sigue
+ * con el carril antes, que es el orden en que se tabula.
+ */
+@media (max-width: 1199px) {
+  .uik-etdemo_product360 {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .uik-etdemo_product360 > .uik-region-head {
+    order: -3;
+  }
+
+  .uik-etdemo_product360 > .uik-region-bar {
+    order: -2;
+  }
+
+  .uik-etdemo_product360 > .uik-region-hero {
+    order: -1;
+  }
+}
+
+/*
+ * El carril desplaza, y desplaza la region: 'rail' esta declarado en keepScroll, que lee el
+ * scrollTop del nodo de la region. Con el overflow en la lista de dentro ese numero seria siempre
+ * 0 y elegir un producto -- que repinta el carril para marcar el elegido -- devolveria la lista al
+ * principio, que es exactamente lo que no puede pasar en la region con la que se elige.
+ */
+.uik-etdemo_product360 > .uik-region-rail {
+  max-height: var(--pr360-rail);
+  overflow-y: auto;
+  border: 1px solid var(--uik-line);
+  border-radius: var(--pr360-radius);
+  background: var(--uik-surface);
+}
+
+/* El marco paso a la region, asi que el panel de dentro no lleva el suyo. */
+.uik-etdemo_product360 > .uik-region-rail .pr360-panel {
+  border: 0;
+  border-radius: 0;
+  background: none;
+}
+
+/* La cabecera se queda arriba: si no, el titulo y el contador se van al bajar por el carril. */
+.uik-etdemo_product360 > .uik-region-rail .pr360-panel-head {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  margin: -14px -16px var(--pr360-gap-sm);
+  padding: 14px 16px 0;
+  background: var(--uik-surface);
+}
+
+/*
+ * La tabla de sitios, por lo mismo: 'locators' tambien esta en keepScroll. Es la unica otra
+ * region que desplaza, y es a proposito -- prometer scroll conservado en una region que crece
+ * libremente es letra muerta, porque no hay scrollTop que conservar.
+ */
+.uik-etdemo_product360 > .uik-region-locators {
+  max-height: clamp(240px, 46vh, 560px);
+  overflow-y: auto;
+  border: 1px solid var(--uik-line);
+  border-radius: var(--pr360-radius);
+  background: var(--uik-surface);
+}
+
+.uik-etdemo_product360 > .uik-region-locators .pr360-panel {
+  border: 0;
+  border-radius: 0;
+  background: none;
+}
+
+.uik-etdemo_product360 > .uik-region-locators .pr360-panel-head {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  margin: -14px -16px var(--pr360-gap-sm);
+  padding: 14px 16px 0;
+  background: var(--uik-surface);
+}
+
+/*
+ * La cabecera de la tabla se pega bajo la del panel. El fondo es obligatorio: sin el, las filas
+ * pasan por debajo del texto y se lee una cifra encima de su rotulo.
+ */
+.uik-etdemo_product360 > .uik-region-locators .pr360-table thead th {
+  position: sticky;
+  top: 34px;
+  z-index: 1;
+  background: var(--uik-surface);
+}
+
+/*
+ * El rastro lleva su tabla dentro de un .pr360-scroll, y el marco general de ese envoltorio sobra
+ * aqui: el panel ya tiene el suyo, asi que dibujarlo otra vez pone dos rectangulos concentricos a
+ * dos pixeles uno del otro. Queda solo el eje horizontal, que es lo unico que se le pedia: a 768px
+ * de ancho la tabla mide 573 contra 468 de region y sin desplazamiento propio el shell le cortaba
+ * la columna del documento sin dejar gesto para alcanzarla.
+ */
+.uik-etdemo_product360 > .uik-region-trail .pr360-scroll {
+  border: 0;
+  border-radius: 0;
+  background: none;
+}
+
+/* ------------------------------------------------- vocabulario de la propuesta */
+
+/* El dato de la derecha de una cabecera de panel: cuantos hay, en que unidad, de cuantos. */
+.uik-etdemo_product360 .pr360-panel-aside {
+  flex: 0 0 auto;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--uik-ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Un titulo de segundo nivel dentro de un panel, para un bloque que no merece panel propio. */
+.uik-etdemo_product360 .pr360-panel-sub {
+  margin: 0 0 var(--pr360-gap-sm);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--uik-ink-soft);
+}
+
+/* Chips que estan pero no compiten: tamano de pagina, grano del libro. */
+.uik-etdemo_product360 .pr360-chips-quiet .pr360-chip {
+  min-height: 28px;
+  padding: 0 10px;
+  font-size: 11px;
+}
+
+/*
+ * Una barra proporcional dentro de un renglon o de una celda. No es .uik-spark, que es un SVG de
+ * serie temporal: esto es una sola cifra comparada con el maximo de lo que se esta viendo, y por
+ * eso el ancho llega en --uik-v como en las barras del kit.
+ */
+.uik-etdemo_product360 .pr360-spark {
+  position: relative;
+  display: block;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--uik-ground);
+  overflow: hidden;
+}
+
+/*
+ * El piso: un valor que no es cero se ve, y un cero no se ve.
+ *
+ * min(v * 100000, Npx) vale exactamente 0 cuando --uik-v es 0% -- que es lo que emiten K.bars y
+ * pickBar para una fila a cero -- y N pixeles en cuanto hay dato. Sin el, 15.000 sobre un maximo
+ * de 1.005.000 son 11px de relleno a opacidad 0,16 que arrancan debajo del padding y del rotulo
+ * del kit: no era ancho cero, era ancho enterrado, y la fila se leia igual que una vacia.
+ */
+.uik-etdemo_product360 .pr360-spark::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: max(var(--uik-v, 0%), min(calc(var(--uik-v, 0%) * 100000), 6px));
+  border-radius: 2px;
+  background: var(--uik-brand);
+  opacity: 0.55;
+}
+
+/*
+ * Lo mismo para las barras del kit dentro de esta ventana. Es un matiz al pintado de
+ * com.etendoerp.uikit, cualificado dentro de la raiz del modulo y por un motivo concreto: el kit
+ * resuelve la geometria, y el modulo solo garantiza que "hay dato" y "no hay dato" no coincidan.
+ * Los 18px son los 8 de padding del kit mas 10 visibles.
+ */
+.uik-etdemo_product360 .uik-bars .uik-bar::before {
+  width: max(var(--uik-v, 0%), min(calc(var(--uik-v, 0%) * 100000), 18px));
+}
+
+/* Un texto que sigue en el DOM para que su hueco mida igual, pero que no se lee. */
+.uik-etdemo_product360 .pr360-mute {
+  visibility: hidden;
+}
+
+/* ------------------------------------------------------------------ carril */
+
+.uik-etdemo_product360 .pr360-rail-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.uik-etdemo_product360 .pr360-rail-item + .pr360-rail-item {
+  border-top: 1px solid var(--uik-line);
+}
+
+/*
+ * El renglon entero es el boton, no un enlace dentro del renglon: la diana es lo que se ve, que
+ * es la unica manera de que elegir el producto siguiente no pida apuntar.
+ */
+.uik-etdemo_product360 .pr360-rail-pick {
+  display: block;
+  width: 100%;
+  padding: 8px 6px;
+  border: 0;
+  border-left: 3px solid transparent;
+  border-radius: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.uik-etdemo_product360 .pr360-rail-pick:hover {
+  background: var(--uik-ground);
+}
+
+/* El elegido no depende solo del tono: gana el borde de marca y el peso del codigo. */
+.uik-etdemo_product360 .pr360-rail-pick.on {
+  border-left-color: var(--uik-brand);
+  background: var(--uik-ground);
+}
+
+.uik-etdemo_product360 .pr360-rail-top {
+  display: flex;
+  align-items: baseline;
+  gap: var(--pr360-gap-sm);
+}
+
+.uik-etdemo_product360 .pr360-rail-code {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--uik-ink);
+}
+
+.uik-etdemo_product360 .pr360-rail-qty {
+  flex: 0 0 auto;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--uik-ink);
+}
+
+.uik-etdemo_product360 .pr360-rail-name {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  color: var(--uik-ink-soft);
+}
+
+.uik-etdemo_product360 .pr360-rail-pick .pr360-spark {
+  margin: 5px 0 4px;
+}
+
+/* Categoria, movimientos y fecha: el tercero se va a la derecha para caer siempre igual. */
+.uik-etdemo_product360 .pr360-rail-foot {
+  display: flex;
+  align-items: baseline;
+  gap: var(--pr360-gap-sm);
+  font-style: normal;
+  font-size: 11px;
+  color: var(--uik-ink-soft);
+}
+
+.uik-etdemo_product360 .pr360-rail-foot > span:first-child {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.uik-etdemo_product360 .pr360-rail-foot > span + span {
+  flex: 0 0 auto;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------- la ficha */
+
+/*
+ * La ficha en dos columnas cuando hay sitio: identidad a la izquierda, cifras a la derecha. La
+ * identidad no crece -- es texto y se lee de una vez -- y las cifras se llevan el resto.
+ */
+.uik-etdemo_product360 .pr360-hero {
+  display: grid;
+  gap: var(--pr360-gap-sm) var(--pr360-gap);
+}
+
+/*
+ * Las areas. Las ocho cifras iban en una sola caja y el reparto reservado cruzaba la ficha entera
+ * debajo, asi que entre la columna de identidad (que acaba donde acaba su texto) y el bloque de
+ * valor quedaban unos 185px de blanco. Partidas en dos -- las tres CANTIDADES arriba a la derecha
+ * y los cinco CONTEOS a lo ancho debajo -- el reparto reservado cae justo bajo las cantidades que
+ * reparte, y la identidad ocupa las dos filas.
+ */
+@media (min-width: 900px) {
+  .uik-etdemo_product360 .pr360-hero {
+    grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
+    grid-template-areas:
+      "id qty"
+      "id split"
+      "counts counts"
+      "worth worth"
+      "asof asof";
+    align-content: start;
+  }
+
+  .uik-etdemo_product360 .pr360-hero .pr360-hero-id {
+    grid-area: id;
+  }
+
+  .uik-etdemo_product360 .pr360-hero .pr360-hero-qty {
+    grid-area: qty;
+    align-content: start;
+  }
+
+  .uik-etdemo_product360 .pr360-hero .pr360-split {
+    grid-area: split;
+  }
+
+  .uik-etdemo_product360 .pr360-hero .pr360-hero-counts {
+    grid-area: counts;
+  }
+
+  .uik-etdemo_product360 .pr360-hero .pr360-worth-block {
+    grid-area: worth;
+  }
+
+  .uik-etdemo_product360 .pr360-hero .pr360-asof {
+    grid-area: asof;
+  }
+}
+
+/* La identidad es la primera celda de la rejilla, y sin esto el nombre largo no puede recortarse. */
+.uik-etdemo_product360 .pr360-hero-id {
+  min-width: 0;
+}
+
+.uik-etdemo_product360 .pr360-hero-code {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+  color: var(--uik-ink);
+}
+
+.uik-etdemo_product360 .pr360-hero-name {
+  margin: 4px 0 0;
+  font-size: 15px;
+  color: var(--uik-ink);
+}
+
+.uik-etdemo_product360 .pr360-hero-desc {
+  margin: 6px 0 0;
+  max-width: 46ch;
+  font-size: 12px;
+  color: var(--uik-ink-soft);
+}
+
+.uik-etdemo_product360 .pr360-hero-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: var(--pr360-gap-sm) 0 0;
+}
+
+/*
+ * Ocho cifras, no cuatro: caben mas estrechas y la cifra baja de 26px a 20px. A 26px las ocho
+ * pedian dos filas de cuatro y la ficha se comia el pliegue entera.
+ */
+.uik-etdemo_product360 .pr360-hero-tiles {
+  grid-template-columns: repeat(auto-fit, minmax(124px, 1fr));
+  gap: 6px;
+}
+
+.uik-etdemo_product360 .pr360-hero-tiles .pr360-tile {
+  padding: 8px 10px;
+}
+
+/* Las partes de una casilla son spans aqui, asi que el margen necesita que sean bloque. */
+.uik-etdemo_product360 .pr360-hero-tiles .pr360-tile-label,
+.uik-etdemo_product360 .pr360-hero-tiles .pr360-tile-value,
+.uik-etdemo_product360 .pr360-hero-tiles .pr360-tile-hint {
+  display: block;
+}
+
+.uik-etdemo_product360 .pr360-hero-tiles .pr360-tile-value {
+  font-size: 20px;
+}
+
+.uik-etdemo_product360 .pr360-hero-tiles .pr360-tile-hint {
+  margin-top: 4px;
+}
+
+/*
+ * El reparto reservado. Una sola cifra -- el porcentaje reservado -- porque el otro es su
+ * complemento y escribir los dos invita a sumarlos con la cantidad en mano.
+ *
+ * Lo dibuja .pr360-spark y no .uik-rail. El carril del kit es un carril de RITMO: su relleno
+ * (--uik-p) es lo consumido y su marca (--uik-e) es donde deberia ir, semantica que este dato no
+ * tiene. Y estaba dibujado al reves de lo que decia: el relleno llevaba el porcentaje DISPONIBLE
+ * mientras el texto al lado nombraba el RESERVADO, asi que en esta base -- donde solo 1 de las
+ * 255 filas de existencias tiene reserva -- la barra salia llena junto a un "0,0% Reserved".
+ * Ahora el relleno es el reservado, que es lo que la cifra nombra, y el piso de .pr360-spark deja
+ * marca en cuanto la reserva no es cero.
+ */
+.uik-etdemo_product360 .pr360-split {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--pr360-gap-sm);
+  padding-top: var(--pr360-gap-sm);
+  border-top: 1px solid var(--uik-line);
+}
+
+.uik-etdemo_product360 .pr360-split-label {
+  flex: 0 0 auto;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--uik-ink-soft);
+}
+
+.uik-etdemo_product360 .pr360-split-rail {
+  flex: 1 1 200px;
+  min-width: 160px;
+  height: 8px;
+  border-radius: 4px;
+}
+
+.uik-etdemo_product360 .pr360-split-rail::before {
+  border-radius: 4px;
+}
+
+.uik-etdemo_product360 .pr360-split-value {
+  flex: 0 0 auto;
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--uik-ink);
+}
+
+.uik-etdemo_product360 .pr360-worth-block {
+  padding-top: var(--pr360-gap-sm);
+  border-top: 1px solid var(--uik-line);
+}
+
+/* Cuatro columnas cortas: no necesita el ancho de la ficha para leerse. */
+.uik-etdemo_product360 .pr360-worth {
+  max-width: 62ch;
+  font-size: 12px;
+}
+
+/* --------------------------------------------------------------- el grafico */
+
+/*
+ * El grafico reserva dos margenes: 62px a la izquierda para la escala y 18px abajo para el rotulo
+ * del eje. Los dos son padding del contenedor, asi que el SVG no los pisa y la escala no tapa
+ * ninguna barra -- que es lo que pasaria poniendo el texto encima del dibujo.
+ *
+ * El contenedor es el bloque de referencia de las dos capas absolutas: la escala se posiciona
+ * contra su caja de padding, de modo que un `top` en pixeles es la misma coordenada que la unidad
+ * del viewBox (el SVG mide 190px de alto y su viewBox 190 unidades).
+ */
+.uik-etdemo_product360 .pr360-chart {
+  position: relative;
+  margin-top: var(--pr360-gap-sm);
+  padding-left: 62px;
+  padding-bottom: 18px;
+}
+
+.uik-etdemo_product360 .pr360-ch-scale {
+  position: absolute;
+  left: 0;
+  width: 56px;
+  transform: translateY(-50%);
+  text-align: right;
+  font-size: 10px;
+  line-height: 1;
+  color: var(--uik-ink-soft);
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+
+/*
+ * El SVG se estira a lo ancho del panel con preserveAspectRatio="none", que deforma cualquier
+ * cosa que tenga forma propia. Por eso no lleva ni una letra y por eso cada trazo declara
+ * vector-effect: sin el, el ancho de linea se estiraria con el eje y la linea del saldo saldria
+ * mas gruesa en una pantalla ancha que en una estrecha.
+ */
+.uik-etdemo_product360 .pr360-chart-svg {
+  display: block;
+  width: 100%;
+  height: 190px;
+}
+
+.uik-etdemo_product360 .pr360-ch-line {
+  fill: none;
+  stroke: var(--uik-brand);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.uik-etdemo_product360 .pr360-ch-area {
+  fill: var(--uik-brand);
+  stroke: none;
+  opacity: 0.12;
+}
+
+.uik-etdemo_product360 .pr360-ch-axis {
+  stroke: var(--uik-line);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+/* Entrada y salida: la direccion la dice el lado del eje, el tono solo separa las dos series. */
+.uik-etdemo_product360 .pr360-ch-in {
+  fill: var(--uik-brand);
+  opacity: 0.75;
+}
+
+.uik-etdemo_product360 .pr360-ch-out {
+  fill: var(--uik-ink-soft);
+  opacity: 0.75;
+}
+
+/* El periodo elegido, marcado detras de las dos series y no encima. */
+.uik-etdemo_product360 .pr360-ch-slot {
+  fill: var(--uik-brand);
+  opacity: 0.08;
+}
+
+/*
+ * La tira de botones es a la vez el eje del tiempo y la unica superficie pulsable del grafico.
+ * Cada boton se lleva la misma fraccion del ancho que su periodo se lleva en el dibujo, asi que
+ * la diana cae debajo de sus barras sin que nadie calcule una posicion.
+ */
+/*
+ * La tira cubre el grafico entero, no solo la linea de rotulos: la diana de un periodo mide los
+ * 208px de alto del dibujo en vez de los 18 de su nombre, asi que pulsar una columna es pulsar
+ * donde estan sus barras. Cada boton se lleva la misma fraccion del ancho que su periodo se lleva
+ * en el dibujo, asi que la diana cae bajo sus barras sin que nadie calcule una posicion.
+ *
+ * Empieza en los 62px del canal de la escala porque el posicionamiento absoluto se mide contra la
+ * caja de padding, que incluye ese canal.
+ */
+.uik-etdemo_product360 .pr360-chart-hits {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 62px;
+  display: flex;
+  align-items: stretch;
+  padding: 0 6px;
+}
+
+.uik-etdemo_product360 .pr360-ch-hit {
+  position: relative;
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+/* El tinte del hover es una columna entera, muy tenue: va sobre el dibujo y no puede taparlo. */
+.uik-etdemo_product360 .pr360-ch-hit::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--uik-brand);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.uik-etdemo_product360 .pr360-ch-hit:hover::before {
+  opacity: 0.06;
+}
+
+/*
+ * El nombre queda al pie de su columna, en los 18px que el contenedor reserva, y su borde
+ * superior dibuja el eje del tiempo. overflow es VISIBLE: con grano mensual el nombre es el ano y
+ * mide mas que sus 6,5px de columna, pero sus vecinos estan en .pr360-mute (visibility:hidden), de
+ * modo que puede desbordar sobre ellos sin taparle nada a nadie. Recortandolo se leia "2".
+ *
+ * Va centrado para que el ano caiga SOBRE su columna y no a su derecha: alineado al inicio, los
+ * 16px que le sobran salian todos hacia el mismo lado y el ultimo rotulo se iba de la region.
+ * min-height y line-height fijan el alto del hueco, que asi no depende de que dentro haya texto:
+ * los huecos van vacios y el eje sigue recto.
+ */
+.uik-etdemo_product360 .pr360-ch-name {
+  position: relative;
+  display: block;
+  overflow: visible;
+  padding: 4px 0 2px;
+  border-top: 1px solid var(--uik-line);
+  font-size: 10px;
+  line-height: 12px;
+  min-height: 12px;
+  white-space: nowrap;
+  text-align: center;
+  color: var(--uik-ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.uik-etdemo_product360 .pr360-ch-hit.on .pr360-ch-name {
+  border-top-color: var(--uik-brand);
+  box-shadow: inset 0 2px 0 var(--uik-brand);
+  font-weight: 700;
+  color: var(--uik-ink);
+}
+
+/* Los rotulos de las dos series y del nivel, con su muestra delante. */
+.uik-etdemo_product360 .pr360-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--pr360-gap-sm) var(--pr360-gap);
+  margin: 0;
+  font-size: 11px;
+  color: var(--uik-ink-soft);
+}
+
+.uik-etdemo_product360 .pr360-key {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.uik-etdemo_product360 .pr360-key::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  background: currentColor;
+}
+
+/* El nivel es una linea, no un area: su muestra tambien. */
+.uik-etdemo_product360 .pr360-key-level {
+  color: var(--uik-brand);
+}
+
+.uik-etdemo_product360 .pr360-key-level::before {
+  height: 2px;
+  width: 14px;
+  border-radius: 1px;
+}
+
+.uik-etdemo_product360 .pr360-key-in {
+  color: var(--uik-brand);
+}
+
+.uik-etdemo_product360 .pr360-key-out {
+  color: var(--uik-ink-soft);
+}
+
+/* Las cinco cifras del periodo elegido, en una linea y con el periodo primero. */
+.uik-etdemo_product360 .pr360-readout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px var(--pr360-gap);
+  margin-top: var(--pr360-gap-sm);
+  padding-top: var(--pr360-gap-sm);
+  border-top: 1px solid var(--uik-line);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: var(--uik-ink);
+}
+
+.uik-etdemo_product360 .pr360-readout em {
+  font-style: normal;
+  color: var(--uik-ink-soft);
+}
+
+.uik-etdemo_product360 .pr360-readout-key {
+  font-weight: 700;
+  color: var(--uik-brand);
+}
+
+/* --------------------------------------------------------- barras que eligen */
+
+/*
+ * Una barra que es un eje. La geometria, el relleno tras el texto y el negativo creciendo desde
+ * el borde derecho ya los resuelve .uik-bar del kit; lo unico que se anade es lo que hace falta
+ * para que un boton no se vea como un boton del navegador, y la marca del elegido.
+ */
+.uik-etdemo_product360 .pr360-barpicks {
+  margin-top: var(--pr360-gap-sm);
+}
+
+.uik-etdemo_product360 .pr360-barpick {
+  width: 100%;
+  border: 0;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  /* El relleno del kit es currentColor: aqui es tinte de marca, el mismo que .pr360-spark. */
+  color: var(--uik-brand);
+}
+
+/*
+ * En reposo eran identicas a las barras de lectura de los paneles vecinos -- misma caja, mismo
+ * gris, misma cifra -- y todo el afford estaba en el hover: nada decia que unas mueven la ventana
+ * entera y otras no. Se leen ahora como .pr360-link: rotulo en marca y peso 600, con la cifra en
+ * tinta. La marca aqui es color de interaccion, no de dato: no afirma nada que el dato no lleve.
+ */
+.uik-etdemo_product360 .pr360-barpick .uik-bar-label {
+  color: var(--uik-brand);
+  font-weight: 600;
+}
+
+.uik-etdemo_product360 .pr360-barpick .uik-bar-value {
+  color: var(--uik-ink);
+}
+
+.uik-etdemo_product360 .pr360-barpick:hover {
+  background: var(--uik-ground);
+  box-shadow: inset 0 0 0 1px var(--uik-brand);
+}
+
+.uik-etdemo_product360 .pr360-barpick:hover .uik-bar-label {
+  text-decoration: underline;
+}
+
+.uik-etdemo_product360 .pr360-barpick.on {
+  background: var(--uik-ground);
+  box-shadow: inset 0 0 0 2px var(--uik-brand);
+}
+
+.uik-etdemo_product360 .pr360-barpick.on .uik-bar-label {
+  font-weight: 700;
+}
+
+/* Un almacen sin nada sigue siendo filtro, pero baja la voz: sigue estando, deja de reclamar. */
+.uik-etdemo_product360 .pr360-barpick[data-zero] .uik-bar-label,
+.uik-etdemo_product360 .pr360-barpick[data-zero] .uik-bar-value {
+  color: var(--uik-ink-soft);
+  font-weight: 400;
+}
+
+/* El puesto del producto entre los de su categoria. */
+.uik-etdemo_product360 .pr360-rank {
+  margin: 0;
+  font-size: 12px;
+  color: var(--uik-ink-soft);
+}
+
+.uik-etdemo_product360 .pr360-rank b {
+  font-size: 15px;
+  color: var(--uik-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+/* La celda que lleva su barra: la barra debajo de la cifra, no detras. */
+.uik-etdemo_product360 .pr360-table td.pr360-cell-bar .pr360-spark {
+  margin-bottom: 3px;
+}
+
+/*
+ * Un sitio vaciado se queda -- es donde estuvo, y en esta base son 163 de 255 filas -- pero baja
+ * la voz y no pinta pista de barra. visibility y no display: la fila conserva su alto y las cifras
+ * de las filas con stock siguen alineadas.
+ */
+.uik-etdemo_product360 .pr360-row-empty td {
+  color: var(--uik-ink-soft);
+}
+
+.uik-etdemo_product360 .pr360-row-empty .pr360-cell-key {
+  font-weight: 400;
+}
+
+.uik-etdemo_product360 .pr360-row-empty .pr360-spark {
+  visibility: hidden;
+}
+
+/* --------------------------------------------------- la mezcla por tipo */
+
+/*
+ * Dos longitudes desde un cero comun: lo que salio a la izquierda del eje, lo que entro a la
+ * derecha, y una sola escala para todas las filas. Es la convencion del panel de flujo del libro
+ * -- entrada y salida a lados opuestos de un eje, marca contra tinta suave, sin verde ni rojo --
+ * y sustituye a una barra unica con el neto, que con un rango entre tipos de 7.350.270x dejaba
+ * dos filas indistinguibles al 95% y una tercera sin dibujar nada.
+ */
+.uik-etdemo_product360 .pr360-mix {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: var(--pr360-gap-sm);
+}
+
+.uik-etdemo_product360 .pr360-mix-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, auto);
+  gap: 4px 10px;
+  padding: 6px 8px;
+  border-radius: var(--pr360-radius-sm);
+  background: var(--uik-surface);
+  box-shadow: inset 0 0 0 1px var(--uik-line);
+}
+
+.uik-etdemo_product360 .pr360-mix-label {
+  min-width: 0;
+  color: var(--uik-ink);
+}
+
+.uik-etdemo_product360 .pr360-mix-label em,
+.uik-etdemo_product360 .pr360-mix-net em {
+  display: block;
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--uik-ink-soft);
+}
+
+.uik-etdemo_product360 .pr360-mix-net {
+  text-align: right;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--uik-ink);
+}
+
+.uik-etdemo_product360 .pr360-mix-track {
+  position: relative;
+  grid-column: 1 / -1;
+  height: 10px;
+  border-radius: 2px;
+  background: var(--uik-ground);
+}
+
+/* El eje: el cero comun de las dos series. */
+.uik-etdemo_product360 .pr360-mix-track::after {
+  content: "";
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  left: 50%;
+  width: 1px;
+  background: var(--uik-ink-soft);
+}
+
+/*
+ * Cada lado ocupa media pista, y lleva el mismo piso que las barras del kit: min(v*1e5, 3px) vale
+ * cero exacto cuando el lado es 0% y 3px en cuanto hay dato, asi que un tipo sin salidas no pinta
+ * nada por la izquierda y uno con 5.000 sobre 5.816.500 si pinta algo.
+ */
+.uik-etdemo_product360 .pr360-mix-out,
+.uik-etdemo_product360 .pr360-mix-in {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-radius: 2px;
+  opacity: 0.55;
+}
+
+.uik-etdemo_product360 .pr360-mix-out {
+  right: 50%;
+  width: calc(max(var(--pr360-out, 0%), min(calc(var(--pr360-out, 0%) * 100000), 3px)) / 2);
+  background: var(--uik-ink-soft);
+}
+
+.uik-etdemo_product360 .pr360-mix-in {
+  left: 50%;
+  width: calc(max(var(--pr360-in, 0%), min(calc(var(--pr360-in, 0%) * 100000), 3px)) / 2);
+  background: var(--uik-brand);
+}
+
+/* La direccion de una cantidad con signo en el rastro. Sin verde ni rojo: no es un juicio. */
+.uik-etdemo_product360 .pr360-in {
+  color: var(--uik-ink);
+}
+
+.uik-etdemo_product360 .pr360-out {
+  color: var(--uik-ink-soft);
+}
